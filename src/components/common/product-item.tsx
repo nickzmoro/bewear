@@ -26,7 +26,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
         <p className="text-muted-foreground truncate text-xs font-medium">
           {product.description}
         </p>
-        <p className="truncate text-sm font-semibold">
+        <p className="mt-3 truncate text-sm font-semibold">
           {formatCentsToBRL(firstVariant.priceInCents)}
         </p>
       </div>
