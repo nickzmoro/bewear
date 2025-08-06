@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { useEffect, useRef } from "react";
 
 const formSchema = z.object({
   email: z.email("E-mail invalido. Tente novamente."),
@@ -37,6 +38,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 const SignInForm = () => {
   const router = useRouter();
+  const { data: session } = authClient.useSession();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -53,6 +55,7 @@ const SignInForm = () => {
       fetchOptions: {
         onSuccess: () => {
           router.push("/");
+          toast.success("Seja bem-vindo(a) de volta!");
         },
         onError: (error) => {
           if (error.error.code === "INVALID_EMAIL_OR_PASSWORD") {
