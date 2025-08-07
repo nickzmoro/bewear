@@ -14,7 +14,14 @@ const PartnerBrandsItem = ({
   return (
     <div className="flex flex-col items-center justify-center gap-2">
       <div className="rounded-3xl border border-[#F1F1F1] p-5">
-        <Image src={srcImg} alt={altImg} width={50} height={0} />
+        <Image
+          src={srcImg}
+          alt={altImg}
+          width={0}
+          height={0}
+          sizes="100vw"
+          className="h-auto w-full"
+        />
       </div>
 
       <div className="flex max-w-[200px] flex-col gap-1">
