@@ -21,7 +21,7 @@ export default async function Home() {
   const categories = await db.query.categoryTable.findMany({});
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-9">
       <div className="px-5">
         <Image
           src="/banner-01.png"
@@ -33,7 +33,9 @@ export default async function Home() {
         />
       </div>
       <PartnerBrandsList title="Marcas parceiras" />
-      <ProductList products={products} title="Mais vendidos" />
+      <div className="pl-5">
+        <ProductList products={products} title="Mais vendidos" />
+      </div>
       <div className="px-5">
         <CategorySelector categories={categories} />
       </div>
@@ -47,7 +49,9 @@ export default async function Home() {
           className="h-auto w-full"
         />
       </div>
-      <ProductList products={newlyCreatedProducts} title="Novos produtos" />;
+      <div className="mb-10 pl-5">
+        <ProductList products={newlyCreatedProducts} title="Novos produtos" />
+      </div>
     </div>
   );
 }
