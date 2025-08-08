@@ -12,5 +12,9 @@
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
-  }
+  },
+  "explorer.copyRelativePathSeparator": "auto",
+  "breadcrumbs.filePath": "on",
+  "breadcrumbs.enabled": true,
+  "editor.fontFamily": "\"JetBrains Mono\", Consolas, 'Courier New', monospace"
 }
