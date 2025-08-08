@@ -1,11 +1,13 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
-import { addProductToCartSchema, AddProductToCartSchema } from "./schema";
+
 import { db } from "@/db";
 import { cartItemTable, cartTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { auth } from "@/lib/auth";
+
+import { AddProductToCartSchema, addProductToCartSchema } from "./schema";
 
 export const addProductToCart = async (data: AddProductToCartSchema) => {
   // verificar se o usuário está logado
@@ -14,7 +16,7 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
     headers: await headers(),
   });
   if (!session?.user) {
-    throw new Error("Unathorized");
+    throw new Error("Unauthorized");
   }
 
   // verificar se o produto existe
@@ -33,10 +35,10 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
     4. SE NÃO existir, criar um novo item
     5. Salvar o carrinho
   */
+
   const cart = await db.query.cartTable.findFirst({
     where: (cart, { eq }) => eq(cart.userId, session.user.id),
   });
-
   let cartId = cart?.id;
   if (!cartId) {
     const [newCart] = await db
@@ -50,7 +52,7 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
 
   const cartItem = await db.query.cartItemTable.findFirst({
     where: (cartItem, { eq }) =>
-      eq(cartItem.id, cartId) &&
+      eq(cartItem.cartId, cartId) &&
       eq(cartItem.productVariantId, data.productVariantId),
   });
 
@@ -61,7 +63,9 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
         quantity: cartItem.quantity + data.quantity,
       })
       .where(eq(cartItemTable.id, cartItem.id));
+    return;
   }
+
   await db.insert(cartItemTable).values({
     cartId,
     productVariantId: data.productVariantId,

@@ -7,6 +7,8 @@ import { eq } from "drizzle-orm";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import VariantSelector from "./components/variant-selector";
+import AddToCartButton from "./components/add-to-cart-button";
+import ProductActions from "./components/product-actions";
 
 interface ProductVariantPageProps {
   params: Promise<{ slug: string }>;
@@ -59,26 +61,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
         />
       </div>
 
-      <div>
-        {/* INFORMAÇÕES DO PRODUTO */}
-        <h2 className="text-lg font-semibold">{productVariant.product.name}</h2>
-        <h3 className="text-muted-foreground text-sm">{productVariant.name}</h3>
-        <h3 className="mt-3 text-lg font-semibold">
-          {formatCentsToBRL(productVariant.priceInCents)}
-        </h3>
-      </div>
-
-      <div>{/* QUANTIDADE */}</div>
-
-      <div className="flex flex-col space-y-3">
-        {/* BOTÕES */}
-        <Button className="rounded-full" variant="outline">
-          Adicionar à sacola
-        </Button>
-        <Button className="rounded-full" size="lg">
-          Comprar agora
-        </Button>
-      </div>
+      <ProductActions productVariantId={productVariant.id} />
 
       <div>
         {/* DESCRIÇÃO DO PRODUTO */}
