@@ -14,10 +14,12 @@ import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 import { toast } from "sonner";
-import Cart from "./cart";
+import { Cart } from "./cart";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Header = () => {
   const { data: session } = authClient.useSession();
+  const queryClient = useQueryClient();
 
   return (
     <header className="flex items-center justify-between p-5">
@@ -66,6 +68,10 @@ const Header = () => {
                         variant="outline"
                         onClick={() => {
                           authClient.signOut();
+                          queryClient.removeQueries({
+                            queryKey: ["cart"],
+                            exact: false,
+                          });
                           toast.info(
                             "Você deslogou da sua conta. Faça login novamente!",
                           );

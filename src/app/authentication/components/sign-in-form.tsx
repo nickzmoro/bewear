@@ -84,7 +84,8 @@ const SignInForm = () => {
         fetchOptions: {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: ["cart", session?.user?.id],
+              queryKey: ["cart"],
+              exact: false,
             });
             router.push("/");
             toast.success("Seja bem-vindo(a) de volta!");

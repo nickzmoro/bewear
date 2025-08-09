@@ -5,6 +5,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -168,7 +169,7 @@ export const shippingAddressRelations = relations(
   }),
 );
 
-export const cartTable = pgTable("cart", {
+/*export const cartTable = pgTable("cart", {
   id: uuid().primaryKey().defaultRandom(),
   userId: text("user_id")
     .notNull()
@@ -178,7 +179,46 @@ export const cartTable = pgTable("cart", {
     { onDelete: "set null" },
   ),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+});*/
+
+export const cartTable = pgTable(
+  "cart",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => userTable.id, { onDelete: "cascade" }),
+    shippingAddressId: uuid("shipping_address_id").references(
+      () => shippingAddressTable.id,
+      { onDelete: "set null" },
+    ),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    cartUserUnique: uniqueIndex("cart_user_unique").on(table.userId), // 1 carrinho por usuário
+  }),
+);
+
+export const cartItemTable = pgTable(
+  "cart_item",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    cartId: uuid("cart_id")
+      .notNull()
+      .references(() => cartTable.id, { onDelete: "cascade" }),
+    productVariantId: uuid("product_variant_id")
+      .notNull()
+      .references(() => productVariantTable.id, { onDelete: "cascade" }),
+    quantity: integer("quantity").notNull().default(1),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    cartProductUnique: uniqueIndex("cart_item_cart_product_unique").on(
+      table.cartId,
+      table.productVariantId,
+    ), // impede duplicatas da mesma variante no mesmo carrinho
+  }),
+);
 
 export const cartRelations = relations(cartTable, ({ one, many }) => ({
   user: one(userTable, {
@@ -192,7 +232,7 @@ export const cartRelations = relations(cartTable, ({ one, many }) => ({
   items: many(cartItemTable),
 }));
 
-export const cartItemTable = pgTable("cart_item", {
+/*export const cartItemTable = pgTable("cart_item", {
   id: uuid().primaryKey().defaultRandom(),
   cartId: uuid("cart_id")
     .notNull()
@@ -202,7 +242,7 @@ export const cartItemTable = pgTable("cart_item", {
     .references(() => productVariantTable.id, { onDelete: "cascade" }),
   quantity: integer("quantity").notNull().default(1),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+});*/
 
 export const cartItemRelations = relations(cartItemTable, ({ one }) => ({
   cart: one(cartTable, {
