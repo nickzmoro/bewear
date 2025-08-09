@@ -25,16 +25,13 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useState } from "react";
 import LogInCard from "./log-in-card";
+import { useCart } from "@/hooks/queries/use-cart";
 
 export const Cart = () => {
   const [cardUserLogin, setCardUserLogin] = useState(false);
   const { data: session } = authClient.useSession();
 
-  const { data: cart, isPending: cartIsLoading } = useQuery({
-    queryKey: ["cart", session?.user?.id], // ✅ SOLUÇÃO: Incluir user ID na chave
-    queryFn: () => getCart(),
-    enabled: !!session?.user, // Só busca se o usuário estiver logado
-  });
+  const { data: cart } = useCart();
 
   return (
     <>

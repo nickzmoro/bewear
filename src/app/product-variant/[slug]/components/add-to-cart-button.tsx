@@ -8,6 +8,7 @@ import { addProductToCart } from "@/actions/add-cart-product";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { getUseCartQueryKey } from "@/hooks/queries/use-cart";
 
 interface AddToCartButtonProps {
   productVariantId: string;
@@ -26,9 +27,8 @@ const AddToCartButton = ({
     mutationKey: ["addProductToCard", productVariantId, quantity],
     mutationFn: () => addProductToCart({ productVariantId, quantity }),
     onSuccess: () => {
-      // Invalida TODAS as queries que começam com "cart"
       queryClient.invalidateQueries({
-        queryKey: ["cart"],
+        queryKey: getUseCartQueryKey(),
         exact: false,
       });
       toast.success(`Você adicionou ${quantity}x produto(s) no carrinho!`);

@@ -29,6 +29,7 @@ import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { getUseCartQueryKey } from "@/hooks/queries/use-cart";
 
 const formSchema = z.object({
   email: z.email("E-mail invalido. Tente novamente."),
@@ -62,7 +63,7 @@ const SignInForm = () => {
         fetchOptions: {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: ["cart", session?.user?.id],
+              queryKey: [getUseCartQueryKey(), session?.user?.id],
             });
           },
           onError: () => {
@@ -84,7 +85,7 @@ const SignInForm = () => {
         fetchOptions: {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: ["cart"],
+              queryKey: getUseCartQueryKey(),
               exact: false,
             });
             router.push("/");

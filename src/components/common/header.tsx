@@ -16,6 +16,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { Cart } from "./cart";
 import { useQueryClient } from "@tanstack/react-query";
+import { getUseCartQueryKey } from "@/hooks/queries/use-cart";
 
 const Header = () => {
   const { data: session } = authClient.useSession();
@@ -69,7 +70,7 @@ const Header = () => {
                         onClick={() => {
                           authClient.signOut();
                           queryClient.removeQueries({
-                            queryKey: ["cart"],
+                            queryKey: getUseCartQueryKey(),
                             exact: false,
                           });
                           toast.info(

@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { getUseCartQueryKey } from "@/hooks/queries/use-cart";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
@@ -75,7 +76,7 @@ const SignUpForm = () => {
         name: values.name,
         fetchOptions: {
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            queryClient.invalidateQueries({ queryKey: getUseCartQueryKey() });
             router.push("/");
             toast.success("Bem-vindo(a) ao BEWEAR!");
             setIsLoading(false);

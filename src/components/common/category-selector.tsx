@@ -14,7 +14,7 @@ const CategorySelector = ({ categories }: CategorySelectorProps) => {
           <Button
             key={category.id}
             variant="ghost"
-            className="rounded-full bg-white font-semibold"
+            className="truncate rounded-full bg-white font-semibold"
             asChild
           >
             <Link href={`/category/${category.slug}`}>{category.name}</Link>
