@@ -21,7 +21,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -51,6 +54,8 @@ type FormValues = z.infer<typeof formSchema>;
 
 const SignUpForm = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -62,28 +67,36 @@ const SignUpForm = () => {
   });
 
   async function onSubmit(values: FormValues) {
-    const { data, error } = await authClient.signUp.email({
-      email: values.email,
-      password: values.password,
-      name: values.name,
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/");
-          toast.success("Bem-vindo(a) ao BEWEAR!");
-        },
-        onError: (error) => {
-          if (error.error.code === "USER_ALREADY_EXISTS") {
-            toast.error("E-mail já cadastrado.");
+    setIsLoading(true);
+    try {
+      const { data, error } = await authClient.signUp.email({
+        email: values.email,
+        password: values.password,
+        name: values.name,
+        fetchOptions: {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            router.push("/");
+            toast.success("Bem-vindo(a) ao BEWEAR!");
+            setIsLoading(false);
+          },
+          onError: (error) => {
+            setIsLoading(false);
+            if (error.error.code === "USER_ALREADY_EXISTS") {
+              toast.error("E-mail já cadastrado.");
 
-            form.setError("email", {
-              message: "E-mail já cadastrado.",
-            });
-          }
+              form.setError("email", {
+                message: "E-mail já cadastrado.",
+              });
+            }
 
-          toast.error(error.error.message);
+            toast.error(error.error.message);
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -166,7 +179,10 @@ const SignUpForm = () => {
               />
             </CardContent>
             <CardFooter>
-              <Button type="submit">Criar conta</Button>
+              <Button type="submit" disabled={isLoading} className="w-full">
+                {isLoading && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
+                Criar conta
+              </Button>
             </CardFooter>
           </form>
         </Form>
