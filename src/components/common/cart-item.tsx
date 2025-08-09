@@ -7,6 +7,8 @@ import { Button } from "../ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { removeProductFromCart } from "@/actions/remove-cart-product";
 import { toast } from "sonner";
+import { decreaseCartProductQuantity } from "@/actions/decrease-cart-product-quantity";
+import { incrementCartProductQuantity } from "@/actions/increment-cart-product-quantity";
 
 interface CartItemProps {
   id: string;
@@ -26,9 +28,26 @@ const CartItem = ({
   quantity,
 }: CartItemProps) => {
   const queryClient = useQueryClient();
+
   const removeProductFromCartMutation = useMutation({
     mutationKey: ["remove-cart-product"],
     mutationFn: () => removeProductFromCart({ cartItemId: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+  });
+
+  const decreaseCartProductQuantityMutation = useMutation({
+    mutationKey: ["decrease-cart-product"],
+    mutationFn: () => decreaseCartProductQuantity({ cartItemId: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+  });
+
+  const incrementCartProductQuantityMutation = useMutation({
+    mutationKey: ["increment-cart-product"],
+    mutationFn: () => incrementCartProductQuantity({ cartItemId: id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
@@ -41,6 +60,22 @@ const CartItem = ({
       },
       onError: () => {
         toast.error("Erro ao remover produto do carrinho");
+      },
+    });
+  };
+
+  const handleDecreaseQuantityClick = () => {
+    decreaseCartProductQuantityMutation.mutate(undefined, {
+      onError: () => {
+        toast.error("Erro ao diminuir a quantidade do produto no carrinho");
+      },
+    });
+  };
+
+  const handleIncrementQuantityClick = () => {
+    incrementCartProductQuantityMutation.mutate(undefined, {
+      onError: () => {
+        toast.error("Erro ao aumentar a quantidade do produto no carrinho");
       },
     });
   };
@@ -61,11 +96,19 @@ const CartItem = ({
             {productVariantName}
           </p>
           <div className="flex w-[80px] items-center justify-between rounded-lg border p-1">
-            <Button className="h-3 w-3" variant="ghost" onClick={() => {}}>
+            <Button
+              className="h-3 w-3"
+              variant="ghost"
+              onClick={handleDecreaseQuantityClick}
+            >
               <MinusIcon />
             </Button>
             <p className="text-xs font-medium">{quantity}</p>
-            <Button className="h-3 w-3" variant="ghost" onClick={() => {}}>
+            <Button
+              className="h-3 w-3"
+              variant="ghost"
+              onClick={handleIncrementQuantityClick}
+            >
               <PlusIcon />
             </Button>
           </div>
