@@ -3,6 +3,8 @@ import crypto from "crypto";
 import { db } from "@/db";
 import { categoryTable, productTable, productVariantTable } from "./schema";
 
+// npx tsx --env-file=.env src/db/seeds.ts -> para rodar novamente
+
 const productImages = {
   Mochila: {
     Preta: [
@@ -266,7 +268,7 @@ const categories = [
     description: "Camisetas casuais e esportivas",
   },
   {
-    name: "Jaquetas & Moletons",
+    name: "Blusas",
     description: "Jaquetas, corta-ventos e moletons",
   },
   {
@@ -456,7 +458,7 @@ const products = [
     name: "Corta Vento",
     description:
       "Jaqueta corta-vento leve e resistente, ideal para atividades ao ar livre.",
-    categoryName: "Jaquetas & Moletons",
+    categoryName: "Blusas",
     variants: [
       { color: "Preto", price: 19999 },
       { color: "Branco", price: 19999 },
@@ -466,7 +468,7 @@ const products = [
     name: "Jaqueta Windrunner",
     description:
       "Jaqueta Windrunner com design clássico e proteção contra o vento.",
-    categoryName: "Jaquetas & Moletons",
+    categoryName: "Blusas",
     variants: [
       { color: "Azul", price: 22999 },
       { color: "Bege", price: 22999 },
@@ -476,7 +478,7 @@ const products = [
     name: "Jaqueta Style",
     description:
       "Jaqueta com estilo urbano e moderno, perfeita para compor looks casuais.",
-    categoryName: "Jaquetas & Moletons",
+    categoryName: "Blusas",
     variants: [
       { color: "Marrom", price: 17999 },
       { color: "Cinza", price: 17999 },
@@ -485,7 +487,7 @@ const products = [
   {
     name: "Jaqueta Nike Club",
     description: "Jaqueta Nike Club com qualidade premium e design atemporal.",
-    categoryName: "Jaquetas & Moletons",
+    categoryName: "Blusas",
     variants: [
       { color: "Azul", price: 25999 },
       { color: "Amarela", price: 25999 },
