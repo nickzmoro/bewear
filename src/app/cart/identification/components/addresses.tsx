@@ -18,9 +18,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PatternFormat } from "react-number-format";
+import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
 
 const formSchema = z.object({
-  email: z.email("Email inválido"),
+  email: z.string().email("Email inválido"),
   fullName: z.string().min(1, "Nome completo é obrigatório"),
   cpf: z.string().regex(/^\d{11}$/, "CPF inválido"),
   phone: z.string().regex(/^\d{11}$/, "Celular inválido"),
@@ -54,8 +55,14 @@ const Addresses = () => {
     mode: "onBlur",
   });
 
+  const createAddress = useCreateShippingAddress();
+
   const onSubmit = (values: FormValues) => {
-    console.log(values);
+    createAddress.mutate(values, {
+      onSuccess: () => {
+        form.reset();
+      },
+    });
   };
 
   return (
