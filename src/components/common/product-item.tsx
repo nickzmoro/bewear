@@ -16,6 +16,7 @@ const ProductItem = ({ product, textContainerClassName }: ProductItemProps) => {
   const firstVariant = product.variants[0];
   return (
     <Link
+      prefetch
       href={`/product-variant/${firstVariant.slug}`}
       className="flex flex-col gap-4"
     >

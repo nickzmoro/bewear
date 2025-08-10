@@ -17,7 +17,9 @@ const CategorySelector = ({ categories }: CategorySelectorProps) => {
             className="truncate rounded-full bg-white font-semibold"
             asChild
           >
-            <Link href={`/category/${category.slug}`}>{category.name}</Link>
+            <Link prefetch href={`/category/${category.slug}`}>
+              {category.name}
+            </Link>
           </Button>
         ))}
       </div>
