@@ -19,15 +19,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PatternFormat } from "react-number-format";
 import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
+import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 
 const formSchema = z.object({
-  email: z.string().email("Email inválido"),
+  email: z.email("Email inválido"),
   fullName: z.string().min(1, "Nome completo é obrigatório"),
   cpf: z.string().regex(/^\d{11}$/, "CPF inválido"),
   phone: z.string().regex(/^\d{11}$/, "Celular inválido"),
   zipCode: z.string().regex(/^\d{8}$/, "CEP inválido"),
   number: z.string().regex(/^\d+$/, "Número deve conter apenas dígitos"),
   complement: z.string().optional().or(z.literal("")),
+  street: z.string().min(1, "Rua é obrigatório"),
   neighborhood: z.string().min(1, "Bairro é obrigatório"),
   city: z.string().min(1, "Cidade é obrigatório"),
   state: z.string().min(1, "Estado é obrigatório"),
@@ -48,6 +50,7 @@ const Addresses = () => {
       zipCode: "",
       number: "",
       complement: "",
+      street: "",
       neighborhood: "",
       city: "",
       state: "",
@@ -56,6 +59,22 @@ const Addresses = () => {
   });
 
   const createAddress = useCreateShippingAddress();
+  const { data: addresses } = useShippingAddresses();
+
+  const formatAddress = (address: {
+    recipientName: string;
+    street: string;
+    number: string;
+    complement: string | null;
+    neighborhood: string;
+    city: string;
+    state: string;
+  }) => {
+    const complementAddress = address.complement
+      ? ` • ${address.complement}`
+      : "";
+    return `${address.recipientName} • ${address.street} • ${address.number}${complementAddress} • ${address.neighborhood} • ${address.city} • ${address.state}`;
+  };
 
   const onSubmit = (values: FormValues) => {
     createAddress.mutate(values, {
@@ -75,8 +94,27 @@ const Addresses = () => {
           value={selectedAddress ?? undefined}
           onValueChange={setSelectedAddress}
         >
+          {addresses?.map((address) => {
+            const id = address.id;
+            const label = formatAddress(address);
+            return (
+              <Card
+                key={id}
+                className="cursor-pointer"
+                onClick={() => setSelectedAddress(id)}
+              >
+                <CardContent className="py-4">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value={id} id={`address_${id}`} />
+                    <Label htmlFor={`address_${id}`}>{label}</Label>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+
           <Card>
-            <CardContent className="py-4">
+            <CardContent className="py-1">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="add_new" id="add_new" />
                 <Label htmlFor="add_new">Adicionar novo endereço</Label>
@@ -219,6 +257,20 @@ const Addresses = () => {
                       <FormLabel>Complemento</FormLabel>
                       <FormControl>
                         <Input placeholder="Complemento" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="street"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Rua</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Rua" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

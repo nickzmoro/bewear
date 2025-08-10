@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createShippingAddress } from "@/actions/create-shipping-address";
 import type { CreateShippingAddressSchema } from "@/actions/create-shipping-address/schema";
-import { getUseCartQueryKey } from "../queries/use-cart";
+import { getUseShippingAddressesQueryKey } from "../queries/use-shipping-addresses";
 
 export const getCreateShippingAddressMutationKey = () =>
   ["create-shipping-address"] as const;
@@ -14,7 +14,9 @@ export const useCreateShippingAddress = () => {
     mutationFn: (data: CreateShippingAddressSchema) =>
       createShippingAddress(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getUseCartQueryKey() });
+      queryClient.invalidateQueries({
+        queryKey: getUseShippingAddressesQueryKey(),
+      });
     },
   });
 };

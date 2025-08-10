@@ -9,6 +9,7 @@ export const createShippingAddressSchema = z.object({
   number: z.string().regex(/^\d+$/),
   complement: z.string().optional().or(z.literal("")),
   neighborhood: z.string().min(1),
+  street: z.string().min(1, "Rua é obrigatório!"),
   city: z.string().min(1),
   state: z.string().min(1),
 });
