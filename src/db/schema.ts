@@ -195,7 +195,7 @@ export const cartTable = pgTable(
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => ({
-    cartUserUnique: uniqueIndex("cart_user_unique").on(table.userId), // 1 carrinho por usuário
+    cartUserUnique: uniqueIndex("cart_user_unique").on(table.userId),
   }),
 );
 
@@ -216,7 +216,7 @@ export const cartItemTable = pgTable(
     cartProductUnique: uniqueIndex("cart_item_cart_product_unique").on(
       table.cartId,
       table.productVariantId,
-    ), // impede duplicatas da mesma variante no mesmo carrinho
+    ),
   }),
 );
 

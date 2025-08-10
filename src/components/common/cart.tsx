@@ -38,8 +38,11 @@ export const Cart = () => {
       {session?.user ? (
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" className="relative">
               <ShoppingBasketIcon />
+              <div className="bg-primary absolute top-[-5px] right-[-3px] flex items-center justify-center rounded-full px-[4px] text-[0.6rem] text-white">
+                <span>{cart?.items?.length ?? 0}</span>
+              </div>
             </Button>
           </SheetTrigger>
           <SheetContent className="w-4/5">
@@ -105,7 +108,7 @@ export const Cart = () => {
                   </div>
 
                   <Button className="mt-5 rounded-full">
-                    Finalizar compra
+                    <Link href="/cart/identification">Finalizar compra</Link>
                   </Button>
                 </div>
               )}

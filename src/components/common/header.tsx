@@ -36,7 +36,7 @@ const Header = () => {
               <MenuIcon />
             </Button>
           </SheetTrigger>
-          <SheetContent className="rounded-l-xl">
+          <SheetContent className="w-4/5 rounded-l-xl">
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
@@ -87,8 +87,9 @@ const Header = () => {
             ) : (
               <div className="flex items-center justify-between px-5">
                 <h2 className="font-semibold">Olá. Faça seu login!</h2>
-                <Button size="icon" asChild variant={"outline"}>
+                <Button asChild className="rounded-full" size="lg">
                   <Link href="/authentication">
+                    Login
                     <LogInIcon />
                   </Link>
                 </Button>

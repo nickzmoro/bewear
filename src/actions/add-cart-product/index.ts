@@ -10,8 +10,8 @@ import { auth } from "@/lib/auth";
 import { AddProductToCartSchema, addProductToCartSchema } from "./schema";
 
 export const addProductToCart = async (data: AddProductToCartSchema) => {
-  // verificar se o usuário está logado
   addProductToCartSchema.parse(data);
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -19,7 +19,6 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
     throw new Error("Unauthorized");
   }
 
-  // verificar se o produto existe
   const productVariant = await db.query.productVariantTable.findFirst({
     where: (productVariant, { eq }) =>
       eq(productVariant.id, data.productVariantId),
@@ -27,14 +26,6 @@ export const addProductToCart = async (data: AddProductToCartSchema) => {
   if (!productVariant) {
     throw new Error("Product variant not found");
   }
-
-  /*
-    1. Pegar o carrinho, se eu nao tiver, criarei um novo
-    2. Verificar se a variante já existe no carrinho
-    3. SE existir, atualizar a quantidade
-    4. SE NÃO existir, criar um novo item
-    5. Salvar o carrinho
-  */
 
   const cart = await db.query.cartTable.findFirst({
     where: (cart, { eq }) => eq(cart.userId, session.user.id),
