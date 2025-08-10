@@ -20,6 +20,8 @@ import { Button } from "@/components/ui/button";
 import { PatternFormat } from "react-number-format";
 import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
+import { shippingAddressTable } from "@/db/schema";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.email("Email inválido"),
@@ -37,8 +39,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const Addresses = () => {
+interface AddressesProps {
+  shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
+}
+
+const Addresses = ({ shippingAddresses }: AddressesProps) => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+  const [addAddressLoading, setAddAddressLoading] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -59,7 +66,9 @@ const Addresses = () => {
   });
 
   const createAddress = useCreateShippingAddress();
-  const { data: addresses } = useShippingAddresses();
+  const { data: addresses, isLoading } = useShippingAddresses({
+    initialData: shippingAddresses,
+  });
 
   const formatAddress = (address: {
     recipientName: string;
@@ -77,9 +86,11 @@ const Addresses = () => {
   };
 
   const onSubmit = (values: FormValues) => {
+    setAddAddressLoading(true);
     createAddress.mutate(values, {
       onSuccess: () => {
         form.reset();
+        setAddAddressLoading(false);
       },
     });
   };
@@ -321,7 +332,16 @@ const Addresses = () => {
               </div>
 
               <div className="w-full">
-                <Button type="submit">Salvar endereço</Button>
+                <Button
+                  type="submit"
+                  disabled={addAddressLoading}
+                  className="w-full"
+                  size="lg"
+                >
+                  {addAddressLoading
+                    ? `Salvando endereço..`
+                    : "Salvar endereço"}
+                </Button>
               </div>
             </form>
           </Form>
