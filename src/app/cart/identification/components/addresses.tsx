@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +22,10 @@ import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-
 import { useUserAddresses } from "@/hooks/queries/use-shipping-addresses";
 import { shippingAddressTable } from "@/db/schema";
 import { Loader2 } from "lucide-react";
+import { useUpdateCartShippingAddress } from "@/hooks/mutations/use-update-cart-shipping-address";
+import { toast } from "sonner";
+import { useCart } from "@/hooks/queries/use-cart";
+import { getCart } from "@/actions/get-cart";
 
 const formSchema = z.object({
   email: z.email("Email inválido"),
@@ -41,10 +45,16 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface AddressesProps {
   shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
+  defaultShippingAddressId: string | null;
 }
 
-const Addresses = ({ shippingAddresses }: AddressesProps) => {
-  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+const Addresses = ({
+  shippingAddresses,
+  defaultShippingAddressId,
+}: AddressesProps) => {
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(
+    defaultShippingAddressId || null,
+  );
   const [addAddressLoading, setAddAddressLoading] = useState(false);
 
   const form = useForm<FormValues>({
@@ -66,6 +76,7 @@ const Addresses = ({ shippingAddresses }: AddressesProps) => {
   });
 
   const createAddress = useCreateShippingAddress();
+  const updateShipping = useUpdateCartShippingAddress();
   const { data: addresses, isLoading } = useUserAddresses({
     initialData: shippingAddresses,
   });
@@ -88,10 +99,20 @@ const Addresses = ({ shippingAddresses }: AddressesProps) => {
   const onSubmit = (values: FormValues) => {
     setAddAddressLoading(true);
     createAddress.mutate(values, {
-      onSuccess: () => {
-        form.reset();
-        setAddAddressLoading(false);
+      onSuccess: (address) => {
+        updateShipping.mutate(
+          { shippingAddressId: address.id },
+          {
+            onSuccess: () => {
+              form.reset();
+              setSelectedAddress(address.id);
+              toast.success("Endereço salvo com sucesso!");
+            },
+            onSettled: () => setAddAddressLoading(false),
+          },
+        );
       },
+      onError: () => setAddAddressLoading(false),
     });
   };
 
@@ -345,6 +366,23 @@ const Addresses = ({ shippingAddresses }: AddressesProps) => {
               </div>
             </form>
           </Form>
+        )}
+        {selectedAddress && selectedAddress !== "add_new" && (
+          <div className="w-full">
+            <Button
+              className="w-full"
+              size="lg"
+              disabled={updateShipping.isPending}
+              onClick={() => {
+                updateShipping.mutate({ shippingAddressId: selectedAddress });
+              }}
+            >
+              {updateShipping.isPending && <Loader2 className="animate-spin" />}
+              {updateShipping.isPending
+                ? "Salvando endereço.."
+                : "Ir para pagamento"}
+            </Button>
+          </div>
         )}
       </CardContent>
     </Card>
