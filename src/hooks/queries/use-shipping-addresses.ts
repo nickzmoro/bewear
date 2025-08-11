@@ -5,7 +5,7 @@ import { shippingAddressTable } from "@/db/schema";
 export const getUseShippingAddressesQueryKey = () =>
   ["shipping-addresses"] as const;
 
-export const useShippingAddresses = (params?: {
+export const useUserAddresses = (params?: {
   initialData?: (typeof shippingAddressTable.$inferSelect)[];
 }) => {
   return useQuery({

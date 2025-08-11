@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PatternFormat } from "react-number-format";
 import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
-import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
+import { useUserAddresses } from "@/hooks/queries/use-shipping-addresses";
 import { shippingAddressTable } from "@/db/schema";
 import { Loader2 } from "lucide-react";
 
@@ -66,7 +66,7 @@ const Addresses = ({ shippingAddresses }: AddressesProps) => {
   });
 
   const createAddress = useCreateShippingAddress();
-  const { data: addresses, isLoading } = useShippingAddresses({
+  const { data: addresses, isLoading } = useUserAddresses({
     initialData: shippingAddresses,
   });
 
