@@ -107,7 +107,7 @@ export const Cart = () => {
                     <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
                   </div>
 
-                  <Button className="mt-5 rounded-full">
+                  <Button className="mt-5 rounded-full" asChild>
                     <Link prefetch href="/cart/identification">
                       Finalizar compra
                     </Link>

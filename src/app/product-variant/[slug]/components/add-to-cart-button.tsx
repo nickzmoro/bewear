@@ -41,7 +41,7 @@ const AddToCartButton = ({
 
   const handleAddToCart = () => {
     if (!session?.user) {
-      toast.info("Faça login para adicionar produtos ao carrinho!");
+      toast.error("Faça login para adicionar produtos ao carrinho!");
       router.push("/authentication");
       return;
     }

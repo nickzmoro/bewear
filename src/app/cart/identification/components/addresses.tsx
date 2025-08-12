@@ -359,6 +359,7 @@ const Addresses = ({
                   className="w-full"
                   size="lg"
                 >
+                  {addAddressLoading && <Loader2 className="animate-spin" />}
                   {addAddressLoading
                     ? `Salvando endereço..`
                     : "Salvar endereço"}
