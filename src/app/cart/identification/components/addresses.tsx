@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,8 +24,9 @@ import { shippingAddressTable } from "@/db/schema";
 import { Loader2 } from "lucide-react";
 import { useUpdateCartShippingAddress } from "@/hooks/mutations/use-update-cart-shipping-address";
 import { toast } from "sonner";
-import { useCart } from "@/hooks/queries/use-cart";
-import { getCart } from "@/actions/get-cart";
+import { routerServerGlobal } from "next/dist/server/lib/router-utils/router-server-context";
+import { useRouter } from "next/navigation";
+import { formatAddress } from "../../helpers/address";
 
 const formSchema = z.object({
   email: z.email("Email inválido"),
@@ -52,6 +53,8 @@ const Addresses = ({
   shippingAddresses,
   defaultShippingAddressId,
 }: AddressesProps) => {
+  const router = useRouter();
+
   const [selectedAddress, setSelectedAddress] = useState<string | null>(
     defaultShippingAddressId || null,
   );
@@ -80,21 +83,6 @@ const Addresses = ({
   const { data: addresses, isLoading } = useUserAddresses({
     initialData: shippingAddresses,
   });
-
-  const formatAddress = (address: {
-    recipientName: string;
-    street: string;
-    number: string;
-    complement: string | null;
-    neighborhood: string;
-    city: string;
-    state: string;
-  }) => {
-    const complementAddress = address.complement
-      ? ` • ${address.complement}`
-      : "";
-    return `${address.recipientName} • ${address.street} • ${address.number}${complementAddress} • ${address.neighborhood} • ${address.city} • ${address.state}`;
-  };
 
   const onSubmit = (values: FormValues) => {
     setAddAddressLoading(true);
@@ -128,7 +116,6 @@ const Addresses = ({
         >
           {addresses?.map((address) => {
             const id = address.id;
-            const label = formatAddress(address);
             return (
               <Card
                 key={id}
@@ -138,7 +125,9 @@ const Addresses = ({
                 <CardContent className="py-4">
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value={id} id={`address_${id}`} />
-                    <Label htmlFor={`address_${id}`}>{label}</Label>
+                    <Label htmlFor={`address_${id}`}>
+                      {formatAddress(address)}
+                    </Label>
                   </div>
                 </CardContent>
               </Card>
@@ -375,7 +364,10 @@ const Addresses = ({
               size="lg"
               disabled={updateShipping.isPending}
               onClick={() => {
-                updateShipping.mutate({ shippingAddressId: selectedAddress });
+                updateShipping.mutate(
+                  { shippingAddressId: selectedAddress },
+                  { onSuccess: () => router.push("/cart/confirmation") },
+                );
               }}
             >
               {updateShipping.isPending && <Loader2 className="animate-spin" />}

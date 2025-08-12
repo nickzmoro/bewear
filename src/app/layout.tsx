@@ -30,7 +30,9 @@ export default function RootLayout({
           {children}
         </ReactQueryProvider>
         <Toaster position="top-center" richColors />
-        <Footer />
+        <div className="mt-12">
+          <Footer />
+        </div>
       </body>
     </html>
   );
