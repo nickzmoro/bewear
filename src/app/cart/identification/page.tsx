@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import Addresses from "./components/addresses";
 import CartSummary from "../components/cart-summary";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const IdentificationPage = async () => {
   const session = await auth.api.getSession({
@@ -45,22 +47,24 @@ const IdentificationPage = async () => {
 
   return (
     <div className="space-y-5 px-5">
-      <Addresses
-        shippingAddresses={shippingAddresses}
-        defaultShippingAddressId={cart.shippingAddress?.id || null}
-      />
-      <CartSummary
-        subtotalInCents={cartTotalInCents}
-        totalInCents={cartTotalInCents}
-        products={cart.items.map((item) => ({
-          id: item.productVariant.id,
-          name: item.productVariant.product.name,
-          variantName: item.productVariant.name,
-          quantity: item.quantity,
-          priceInCents: item.productVariant.priceInCents,
-          imageUrl: item.productVariant.imageUrl,
-        }))}
-      />
+      <Suspense fallback={<Loading />}>
+        <Addresses
+          shippingAddresses={shippingAddresses}
+          defaultShippingAddressId={cart.shippingAddress?.id || null}
+        />
+        <CartSummary
+          subtotalInCents={cartTotalInCents}
+          totalInCents={cartTotalInCents}
+          products={cart.items.map((item) => ({
+            id: item.productVariant.id,
+            name: item.productVariant.product.name,
+            variantName: item.productVariant.name,
+            quantity: item.quantity,
+            priceInCents: item.productVariant.priceInCents,
+            imageUrl: item.productVariant.imageUrl,
+          }))}
+        />
+      </Suspense>
     </div>
   );
 };

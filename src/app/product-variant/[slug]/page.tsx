@@ -9,6 +9,8 @@ import { notFound } from "next/navigation";
 import VariantSelector from "./components/variant-selector";
 import AddToCartButton from "./components/add-to-cart-button";
 import ProductActions from "./components/product-actions";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 interface ProductVariantPageProps {
   params: Promise<{ slug: string }>;
@@ -40,41 +42,43 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
 
   return (
     <div className="flex flex-col space-y-6 px-5">
-      <div className="relative h-[380px] w-full rounded-3xl">
-        <Image
-          src={productVariant.imageUrl}
-          alt={productVariant.name}
-          fill
-          className="rounded-3xl object-cover"
-        />
-      </div>
+      <Suspense fallback={<Loading />}>
+        <div className="relative h-[380px] w-full rounded-3xl">
+          <Image
+            src={productVariant.imageUrl}
+            alt={productVariant.name}
+            fill
+            className="rounded-3xl object-cover"
+          />
+        </div>
 
-      <div>
-        {/* VARIANTES */}
-        <p className="mb-3 text-sm font-medium">
-          Selecionar variação{" "}
-          <span className="text-primary">- {productVariant.name}</span>
-        </p>
-        <VariantSelector
-          variants={productVariant.product.variants}
-          selectedVariantSlug={productVariant.slug}
-        />
-      </div>
+        <div>
+          {/* VARIANTES */}
+          <p className="mb-3 text-sm font-medium">
+            Selecionar variação{" "}
+            <span className="text-primary">- {productVariant.name}</span>
+          </p>
+          <VariantSelector
+            variants={productVariant.product.variants}
+            selectedVariantSlug={productVariant.slug}
+          />
+        </div>
 
-      <ProductActions productVariantId={productVariant.id} />
+        <ProductActions productVariantId={productVariant.id} />
 
-      <div>
-        {/* DESCRIÇÃO DO PRODUTO */}
-        <p className="text-sm">{productVariant.product.description}</p>
-      </div>
+        <div>
+          {/* DESCRIÇÃO DO PRODUTO */}
+          <p className="text-sm">{productVariant.product.description}</p>
+        </div>
 
-      <div className="mb-10 flex flex-col gap-5">
-        <div className="h-[1px] w-full bg-[#0000005d]"></div>
-        <ProductList
-          products={likelyProducts}
-          title="Você também pode gostar"
-        />
-      </div>
+        <div className="mb-10 flex flex-col gap-5">
+          <div className="h-[1px] w-full bg-[#0000005d]"></div>
+          <ProductList
+            products={likelyProducts}
+            title="Você também pode gostar"
+          />
+        </div>
+      </Suspense>
     </div>
   );
 };

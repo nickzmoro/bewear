@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatAddress } from "../helpers/address";
 import { Button } from "@/components/ui/button";
 import FinishOrderButton from "./components/finish-order-button";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const ConfirmationPage = async () => {
   const session = await auth.api.getSession({
@@ -52,33 +54,35 @@ const ConfirmationPage = async () => {
 
   return (
     <div className="space-y-5 px-5">
-      <Card>
-        <CardHeader>
-          <CardTitle>Identificação</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <Card>
-            <CardContent>
-              <p className="text-muted-foreground text-sm">
-                {formatAddress(cart.shippingAddress)}
-              </p>
-            </CardContent>
-          </Card>
-          <FinishOrderButton />
-        </CardContent>
-      </Card>
-      <CartSummary
-        subtotalInCents={cartTotalInCents}
-        totalInCents={cartTotalInCents}
-        products={cart.items.map((item) => ({
-          id: item.productVariant.id,
-          name: item.productVariant.product.name,
-          variantName: item.productVariant.name,
-          quantity: item.quantity,
-          priceInCents: item.productVariant.priceInCents,
-          imageUrl: item.productVariant.imageUrl,
-        }))}
-      />
+      <Suspense fallback={<Loading />}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Identificação</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <Card>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">
+                  {formatAddress(cart.shippingAddress)}
+                </p>
+              </CardContent>
+            </Card>
+            <FinishOrderButton />
+          </CardContent>
+        </Card>
+        <CartSummary
+          subtotalInCents={cartTotalInCents}
+          totalInCents={cartTotalInCents}
+          products={cart.items.map((item) => ({
+            id: item.productVariant.id,
+            name: item.productVariant.product.name,
+            variantName: item.productVariant.name,
+            quantity: item.quantity,
+            priceInCents: item.productVariant.priceInCents,
+            imageUrl: item.productVariant.imageUrl,
+          }))}
+        />
+      </Suspense>
     </div>
   );
 };
