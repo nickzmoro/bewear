@@ -1,5 +1,6 @@
 "use client";
 
+import { createCheckoutSession } from "@/actions/create-checkout-session";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,24 +14,44 @@ import {
 import { useFinishOrder } from "@/hooks/mutations/use-finish-order";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 
 const FinishOrderButton = () => {
-  const [successDialog, setSuccessDialog] = useState(true);
   const finishOrderMutation = useFinishOrder();
+
+  const handleFinishOrder = async () => {
+    if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+      throw new Error("Stripe publishable key is not set");
+    }
+    const { orderId } = await finishOrderMutation.mutateAsync();
+    const checkoutSession = await createCheckoutSession({
+      orderId,
+    });
+    const stripe = await loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    );
+    if (!stripe) {
+      throw new Error("Failed to load Stripe");
+    }
+    await stripe.redirectToCheckout({
+      sessionId: checkoutSession.id,
+    });
+  };
 
   return (
     <>
       <Button
         className="w-full rounded-full"
         size="lg"
-        onClick={() => finishOrderMutation.mutate()}
+        onClick={handleFinishOrder}
         disabled={finishOrderMutation.isPending}
       >
         {finishOrderMutation.isPending && <Loader2 className="animate-spin" />}
         {finishOrderMutation.isPending ? "Processando.." : "Finalizar compra"}
       </Button>
-      <Dialog open={successDialog} onOpenChange={setSuccessDialog}>
+      {/*<Dialog open={successDialogIsOpen} onOpenChange={setSuccessDialogIsOpen}>
         <DialogContent className="text-center">
           <Image
             src={"/illustration.svg"}
@@ -51,12 +72,12 @@ const FinishOrderButton = () => {
                 Ver meus pedidos
               </Button>
               <Button className="rounded-full" variant="outline" size="lg">
-                Voltar para a loja
+                <Link href={"/"}>Voltar para a loja</Link>
               </Button>
             </div>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog>*/}
     </>
   );
 };
