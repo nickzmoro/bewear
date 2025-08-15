@@ -26,6 +26,7 @@ import Link from "next/link";
 import { useState } from "react";
 import LogInCard from "./log-in-card";
 import { useCart } from "@/hooks/queries/use-cart";
+import { Badge } from "../ui/badge";
 
 export const Cart = () => {
   const [cardUserLogin, setCardUserLogin] = useState(false);
@@ -40,8 +41,13 @@ export const Cart = () => {
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="relative">
               <ShoppingBasketIcon />
-              <div className="bg-primary absolute top-[-5px] right-[-3px] flex items-center justify-center rounded-full px-[4px] text-[0.6rem] text-white">
-                <span>{cart?.items?.length ?? 0}</span>
+              <div className="absolute top-[-10px] right-[-3px] flex items-center justify-center rounded-full border border-[#7e7e7e] bg-white px-[4px] text-white">
+                <Badge
+                  className="w-[1px] px-[4px] text-[0.6rem]"
+                  variant="secondary"
+                >
+                  {cart?.items?.length ?? 0}
+                </Badge>
               </div>
             </Button>
           </SheetTrigger>
