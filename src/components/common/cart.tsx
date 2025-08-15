@@ -41,9 +41,9 @@ export const Cart = () => {
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="relative">
               <ShoppingBasketIcon />
-              <div className="absolute top-[-10px] right-[-3px] flex items-center justify-center rounded-full border border-[#7e7e7e] bg-white px-[4px] text-white">
+              <div className="absolute top-[-10px] right-[-3px] flex items-center justify-center rounded-full bg-[#181818] px-[4px] text-white">
                 <Badge
-                  className="w-[1px] px-[4px] text-[0.6rem]"
+                  className="w-[1px] bg-[#181818] px-[4px] text-[0.6rem] font-semibold text-white"
                   variant="secondary"
                 >
                   {cart?.items?.length ?? 0}
