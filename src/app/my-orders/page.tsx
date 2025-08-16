@@ -49,7 +49,7 @@ const MyOrdersPage = async () => {
             cpf: order.cpf,
             zipCode: order.zipCode,
             items: order.items.map((item) => ({
-              id: item,
+              id: item.id,
               imageUrl: item.productVariant.imageUrl,
               productName: item.productVariant.product.name,
               productVariantName: item.productVariant.name,

@@ -50,7 +50,7 @@ interface OrdersProps {
     state: string;
     country: string;
     neighborhood: string;
-    zipCode: number;
+    zipCode: string;
     cpf: string;
   }>;
 }
