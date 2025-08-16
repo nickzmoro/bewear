@@ -4,6 +4,7 @@ import {
   ShoppingBasketIcon,
   UserRoundX,
   X,
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -30,9 +31,17 @@ import { Badge } from "../ui/badge";
 
 export const Cart = () => {
   const [cardUserLogin, setCardUserLogin] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { data: session } = authClient.useSession();
 
   const { data: cart } = useCart();
+
+  const handleFinishPurchase = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  };
 
   return (
     <>
@@ -113,10 +122,20 @@ export const Cart = () => {
                     <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
                   </div>
 
-                  <Button className="mt-5 rounded-full" asChild>
-                    <Link prefetch href="/cart/identification">
-                      Finalizar compra
-                    </Link>
+                  <Button
+                    className="mt-5 rounded-full"
+                    asChild={!isLoading}
+                    disabled={isLoading}
+                    onClick={handleFinishPurchase}
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Processando...
+                      </div>
+                    ) : (
+                      <Link href="/cart/identification">Finalizar compra</Link>
+                    )}
                   </Button>
                 </div>
               )}

@@ -8,6 +8,7 @@ import Addresses from "./components/addresses";
 import CartSummary from "../components/cart-summary";
 import { Suspense } from "react";
 import Loading from "./loading";
+import OrderSteps from "../components/order-steps";
 
 const IdentificationPage = async () => {
   const session = await auth.api.getSession({
@@ -48,6 +49,7 @@ const IdentificationPage = async () => {
   return (
     <div className="space-y-5 px-5">
       <Suspense fallback={<Loading />}>
+        <OrderSteps hasIdentification={false} hasPayment={false} />
         <Addresses
           shippingAddresses={shippingAddresses}
           defaultShippingAddressId={cart.shippingAddress?.id || null}

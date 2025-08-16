@@ -12,8 +12,7 @@ import {
   shippingAddressTable,
 } from "@/db/schema";
 import { auth } from "@/lib/auth";
-
-import { CreateDirectOrderSchema, createDirectOrderSchema } from "./schema";
+import { createDirectOrderSchema, CreateDirectOrderSchema } from "./schema";
 
 export const createDirectOrder = async (data: CreateDirectOrderSchema) => {
   const session = await auth.api.getSession({

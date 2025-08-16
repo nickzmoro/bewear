@@ -237,7 +237,9 @@ const Orders = ({ orders }: OrdersProps) => {
                       </CardHeader>
                       <CardContent className="space-y-1 text-gray-500">
                         <p>
-                          {order.recipientName} - CPF: {order.cpf}
+                          {order.recipientName} - CPF: {order.cpf.slice(0, 3)}.
+                          {order.cpf.slice(3, 6)}.{order.cpf.slice(6, 9)}-
+                          {order.cpf.slice(9, 11)}
                         </p>
                         <p>
                           {order.street} {order.number}, {order.neighborhood}
@@ -245,7 +247,10 @@ const Orders = ({ orders }: OrdersProps) => {
                         <p>
                           {order.city}, {order.state} - {order.country}
                         </p>
-                        <p>CEP: {order.zipCode}</p>
+                        <p>
+                          CEP: {order.zipCode.slice(0, 5)}-
+                          {order.zipCode.slice(5, 8)}
+                        </p>
                       </CardContent>
                     </Card>
                   )}

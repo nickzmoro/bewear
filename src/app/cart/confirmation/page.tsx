@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import FinishOrderButton from "./components/finish-order-button";
 import { Suspense } from "react";
 import Loading from "./loading";
+import OrderSteps from "../components/order-steps";
 
 const ConfirmationPage = async () => {
   const session = await auth.api.getSession({
@@ -55,6 +56,7 @@ const ConfirmationPage = async () => {
   return (
     <div className="space-y-5 px-5">
       <Suspense fallback={<Loading />}>
+        <OrderSteps hasIdentification hasPayment={false} />
         <Card>
           <CardHeader>
             <CardTitle>Identificação</CardTitle>
