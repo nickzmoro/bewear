@@ -32,6 +32,7 @@ import { Badge } from "../ui/badge";
 export const Cart = () => {
   const [cardUserLogin, setCardUserLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { data: session } = authClient.useSession();
 
   const { data: cart } = useCart();
@@ -40,13 +41,14 @@ export const Cart = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      setIsSheetOpen(false);
     }, 500);
   };
 
   return (
     <>
       {session?.user ? (
-        <Sheet>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="relative">
               <ShoppingBasketIcon />
@@ -72,7 +74,7 @@ export const Cart = () => {
                     {cart?.items && cart?.items.length === 0 && (
                       <div className="flex flex-col items-center justify-center py-8 text-center">
                         <ShoppingBasketIcon className="text-muted-foreground mb-4 h-12 w-12" />
-                        <p className="text-muted-foreground">
+                        <p className="font-medium">
                           Nenhum item no seu carrinho.
                         </p>
                         <p className="text-muted-foreground mt-1 text-sm">
@@ -126,7 +128,9 @@ export const Cart = () => {
                     className="mt-5 rounded-full"
                     asChild={!isLoading}
                     disabled={isLoading}
-                    onClick={handleFinishPurchase}
+                    onClick={() => {
+                      handleFinishPurchase();
+                    }}
                   >
                     {isLoading ? (
                       <div className="flex items-center gap-2">

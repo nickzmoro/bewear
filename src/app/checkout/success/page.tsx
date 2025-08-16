@@ -37,10 +37,15 @@ const SuccessPage = () => {
 
           <DialogFooter>
             <div className="flex w-full flex-col space-y-2">
-              <Button className="rounded-full" size="lg">
+              <Button className="rounded-full" size="lg" asChild>
                 <Link href={"/my-orders"}>Ver meus pedidos</Link>
               </Button>
-              <Button className="rounded-full" variant="outline" size="lg">
+              <Button
+                className="rounded-full"
+                variant="outline"
+                size="lg"
+                asChild
+              >
                 <Link href={"/"}>Voltar para a loja</Link>
               </Button>
             </div>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { LogInIcon, LogOutIcon, MenuIcon } from "lucide-react";
+import { Home, LogInIcon, LogOutIcon, MenuIcon, Truck } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -10,6 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
+import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
@@ -17,10 +18,16 @@ import { toast } from "sonner";
 import { Cart } from "./cart";
 import { useQueryClient } from "@tanstack/react-query";
 import { getUseCartQueryKey } from "@/hooks/queries/use-cart";
+import { Separator } from "../ui/separator";
+import { useCategories } from "@/hooks/queries/use-categories";
 
 const Header = () => {
   const { data: session } = authClient.useSession();
   const queryClient = useQueryClient();
+  const { data: categories } = useCategories();
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const closeSheet = () => setIsSheetOpen(false);
 
   return (
     <header className="flex h-auto w-full items-center justify-between p-5">
@@ -30,7 +37,7 @@ const Header = () => {
 
       <div className="flex items-center gap-1">
         <Cart />
-        <Sheet>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon">
               <MenuIcon />
@@ -42,45 +49,89 @@ const Header = () => {
             </SheetHeader>
             {session?.user ? (
               <>
-                <div className="flex justify-between space-y-6 px-4">
-                  <div className="flex w-full items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarImage
-                          src={session?.user?.image as string | undefined}
-                        />
-                        <AvatarFallback className="bg-gray-200">
-                          {session?.user?.name?.split(" ")[0]?.[0]}
-                          {session?.user?.name?.split(" ")[1]?.[0]}
-                        </AvatarFallback>
-                      </Avatar>
+                <div className="px-5">
+                  <div className="mb-5 flex justify-between space-y-6">
+                    <div className="flex w-full items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Avatar>
+                          <AvatarImage
+                            src={session?.user?.image as string | undefined}
+                          />
+                          <AvatarFallback className="bg-gray-200">
+                            {session?.user?.name?.split(" ")[0]?.[0]}
+                            {session?.user?.name?.split(" ")[1]?.[0]}
+                          </AvatarFallback>
+                        </Avatar>
 
-                      <div>
-                        <h3 className="font-semibold">{session?.user?.name}</h3>
-                        <span className="text-muted-foreground block text-xs">
-                          {session?.user?.email}
-                        </span>
+                        <div>
+                          <h3 className="font-semibold">
+                            {session?.user?.name}
+                          </h3>
+                          <span className="text-muted-foreground block text-xs">
+                            {session?.user?.email}
+                          </span>
+                        </div>
                       </div>
                     </div>
-
-                    <div>
+                  </div>
+                  <Separator />
+                  <div className="my-5 space-y-1">
+                    <Button
+                      className="flex w-full items-center justify-start font-medium"
+                      variant="ghost"
+                      asChild
+                    >
+                      <Link href={"/"} onClick={closeSheet}>
+                        <Home /> Início
+                      </Link>
+                    </Button>
+                    <Button
+                      className="flex w-full items-center justify-start font-medium"
+                      variant="ghost"
+                      asChild
+                    >
+                      <Link href={"/my-orders"} onClick={closeSheet}>
+                        <Truck /> Meus pedidos
+                      </Link>
+                    </Button>
+                  </div>
+                  <Separator />
+                  <div className="my-5 space-y-1">
+                    {categories?.data?.map((category) => (
                       <Button
-                        size="icon"
-                        variant="outline"
-                        onClick={() => {
-                          authClient.signOut();
-                          queryClient.removeQueries({
-                            queryKey: getUseCartQueryKey(),
-                            exact: false,
-                          });
-                          toast.info(
-                            "Você deslogou da sua conta. Faça login novamente!",
-                          );
-                        }}
+                        className="flex w-full items-center justify-start font-medium"
+                        variant="ghost"
+                        key={category.id}
+                        asChild
                       >
-                        <LogOutIcon />
+                        <Link
+                          href={`/category/${category.slug}`}
+                          onClick={closeSheet}
+                        >
+                          {category.name}
+                        </Link>
                       </Button>
-                    </div>
+                    ))}
+                  </div>
+                  <Separator />
+                  <div className="mt-5">
+                    <Button
+                      size="default"
+                      variant="ghost"
+                      onClick={() => {
+                        authClient.signOut();
+                        queryClient.removeQueries({
+                          queryKey: getUseCartQueryKey(),
+                          exact: false,
+                        });
+                        toast.info(
+                          "Você deslogou da sua conta. Faça login novamente!",
+                        );
+                      }}
+                      className="flex w-full items-center justify-start text-[#656565] hover:bg-red-100 hover:text-red-400"
+                    >
+                      <LogOutIcon /> Sair da conta
+                    </Button>
                   </div>
                 </div>
               </>
