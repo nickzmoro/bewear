@@ -34,6 +34,9 @@ const CancelPage = () => {
             <Button className="rounded-full" variant="destructive" size="lg">
               <Link href={"/"}>Voltar para a loja</Link>
             </Button>
+            <Button className="rounded-full" variant="ghost" size="sm">
+              <Link href={"/my-orders"}>Ir aos meus pedidos</Link>
+            </Button>
           </div>
         </DialogFooter>
       </DialogContent>

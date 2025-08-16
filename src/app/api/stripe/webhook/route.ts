@@ -24,9 +24,11 @@ export const POST = async (request: Request) => {
     console.log("Checkout session completed");
     const session = event.data.object as Stripe.Checkout.Session;
     const orderId = session.metadata?.orderId;
+
     if (!orderId) {
-      return NextResponse.error();
+      return console.log("Order não existe");
     }
+
     await db
       .update(orderTable)
       .set({
@@ -34,5 +36,6 @@ export const POST = async (request: Request) => {
       })
       .where(eq(orderTable.id, orderId));
   }
+
   return NextResponse.json({ received: true });
 };
