@@ -106,7 +106,7 @@ const Orders = ({ orders }: OrdersProps) => {
               <AccordionItem value="item-1">
                 <AccordionTrigger className="px-6 py-0 hover:no-underline">
                   <div className="flex w-full items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col-reverse gap-3">
                       <p className="text-sm font-semibold text-gray-800">
                         Pedido #{order.id.slice(0, 4).toLocaleUpperCase()}
                       </p>
