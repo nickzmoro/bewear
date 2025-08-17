@@ -14,5 +14,11 @@ export const useCreateDirectOrder = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
+    onError: (error: Error) => {
+      if (error.message.includes("Shipping address not found")) {
+        return { type: "no-address", message: error.message };
+      }
+      return { type: "general", message: error.message };
+    },
   });
 };
