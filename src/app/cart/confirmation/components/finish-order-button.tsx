@@ -4,9 +4,6 @@ import { createCheckoutSession } from "@/actions/create-checkout-session";
 import { Button } from "@/components/ui/button";
 import { useFinishOrder } from "@/hooks/mutations/use-finish-order";
 import { Loader2 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
 const FinishOrderButton = () => {

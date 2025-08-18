@@ -1,17 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import {
-  PersonStanding,
-  ShoppingBasketIcon,
-  UserRoundX,
-  X,
-  Loader2,
-} from "lucide-react";
-import Image from "next/image";
-
-import { getCart } from "@/actions/get-cart";
+import { ShoppingBasketIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCentsToBRL } from "@/helpers/money";
-
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import {

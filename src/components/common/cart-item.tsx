@@ -4,15 +4,8 @@ import Image from "next/image";
 import { formatCentsToBRL } from "@/helpers/money";
 
 import { Button } from "../ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { removeProductFromCart } from "@/actions/remove-cart-product";
 import { toast } from "sonner";
-import { decreaseCartProductQuantity } from "@/actions/decrease-cart-product-quantity";
-import { incrementCartProductQuantity } from "@/actions/increment-cart-product-quantity";
-import {
-  getRemoveProductFromCartMutationKey,
-  useRemoveProductFromCart,
-} from "@/hooks/mutations/use-remove-product-from-cart";
+import { useRemoveProductFromCart } from "@/hooks/mutations/use-remove-product-from-cart";
 import { useDecreaseCartProductQuantity } from "@/hooks/mutations/use-decrease-cart-product-quantity";
 import { useIncrementCartProductQuantity } from "@/hooks/mutations/use-increment-cart-product-quantity";
 

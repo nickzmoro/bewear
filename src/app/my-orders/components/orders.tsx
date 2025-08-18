@@ -18,15 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { orderTable } from "@/db/schema";
 import { formatCentsToBRL } from "@/helpers/money";
 import { useCart } from "@/hooks/queries/use-cart";
-import CartSummary from "@/app/cart/components/cart-summary";
-import {
-  BoxIcon,
-  BoxSelect,
-  List,
-  ListCheck,
-  Paperclip,
-  Loader2,
-} from "lucide-react";
+import { BoxIcon, Loader2 } from "lucide-react";
 import { createCheckoutSession } from "@/actions/create-checkout-session";
 
 interface OrdersProps {

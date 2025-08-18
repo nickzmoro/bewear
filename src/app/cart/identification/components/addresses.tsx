@@ -24,7 +24,6 @@ import { shippingAddressTable } from "@/db/schema";
 import { Loader2 } from "lucide-react";
 import { useUpdateCartShippingAddress } from "@/hooks/mutations/use-update-cart-shipping-address";
 import { toast } from "sonner";
-import { routerServerGlobal } from "next/dist/server/lib/router-utils/router-server-context";
 import { useRouter } from "next/navigation";
 import { formatAddress } from "../../helpers/address";
 

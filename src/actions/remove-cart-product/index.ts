@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 import { db } from "@/db";
-import { cartItemTable, cartTable } from "@/db/schema";
+import { cartItemTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import { removeProductFromCartSchema } from "./schema";

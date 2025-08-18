@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 import CartSummary from "../components/cart-summary";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatAddress } from "../helpers/address";
-import { Button } from "@/components/ui/button";
 import FinishOrderButton from "./components/finish-order-button";
 import { Suspense } from "react";
 import Loading from "./loading";
