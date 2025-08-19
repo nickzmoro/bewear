@@ -1,6 +1,8 @@
 "use client";
 
 import { productTable, productVariantTable } from "@/db/schema";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 import ProductItem from "./product-item";
 
@@ -15,11 +17,39 @@ const ProductList = ({ title, products }: ProductListProps) => {
   return (
     <div className="space-y-6">
       <h3 className="font-semibold">{title}</h3>
-      <div className="flex w-full gap-4 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+      <Swiper
+        className="mySwiper swiper-h"
+        spaceBetween={50}
+        slidesPerView={1}
+        breakpoints={{
+          320: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+          },
+          640: {
+            slidesPerView: 2,
+            spaceBetween: 30,
+          },
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 40,
+          },
+          1000: {
+            slidesPerView: 5,
+            spaceBetween: 50,
+          },
+          1280: {
+            slidesPerView: 6,
+            spaceBetween: 50,
+          },
+        }}
+      >
         {products.map((product) => (
-          <ProductItem key={product.id} product={product} />
+          <SwiperSlide key={product.id}>
+            <ProductItem product={product} />
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
     </div>
   );
 };

@@ -12,22 +12,22 @@ const PartnerBrandsItem = ({
   brandName,
 }: PartnerBrandsItemProps) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-2">
-      <div className="rounded-3xl border border-[#F1F1F1] p-5">
-        <Image
-          src={srcImg}
-          alt={altImg}
-          width={0}
-          height={0}
-          sizes="100vw"
-          className="h-auto w-full"
-        />
+    <>
+      <div className="flex flex-col items-center justify-center rounded-3xl border border-[#F1F1F1] py-5">
+        <div className="flex h-10 w-10 items-center justify-center">
+          <Image
+            src={srcImg}
+            alt={altImg}
+            width={40}
+            height={40}
+            className="h-8 w-8 object-contain"
+          />
+        </div>
       </div>
-
-      <div className="flex max-w-[200px] flex-col gap-1">
-        <p className="truncate text-sm font-semibold">{brandName}</p>
+      <div className="mt-2 text-center">
+        <p className="truncate text-sm font-medium">{brandName}</p>
       </div>
-    </div>
+    </>
   );
 };
 

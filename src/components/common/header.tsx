@@ -2,7 +2,19 @@
 
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { Home, LogInIcon, LogOutIcon, MenuIcon, Truck } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Home,
+  LogInIcon,
+  LogOutIcon,
+  MapPin,
+  MenuIcon,
+  Star,
+  Truck,
+  User2,
+  UserIcon,
+} from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -20,22 +32,138 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getUseCartQueryKey } from "@/hooks/queries/use-cart";
 import { Separator } from "../ui/separator";
 import { useCategories } from "@/hooks/queries/use-categories";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const Header = () => {
   const { data: session } = authClient.useSession();
   const queryClient = useQueryClient();
   const { data: categories } = useCategories();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const closeSheet = () => setIsSheetOpen(false);
 
   return (
-    <header className="flex h-auto w-full items-center justify-between p-5">
+    <header className="flex h-auto w-full items-center justify-between p-5 min-sm:px-10">
+      <div className="hidden items-center gap-2 min-sm:flex">
+        {session?.user ? (
+          <>
+            <DropdownMenu
+              open={isDropdownOpen}
+              onOpenChange={setIsDropdownOpen}
+            >
+              <DropdownMenuTrigger>
+                <Button
+                  className="flex items-center gap-2 font-medium"
+                  variant={"ghost"}
+                >
+                  <Avatar className="h-auto w-6">
+                    <AvatarImage
+                      src={session?.user?.image as string | undefined}
+                    />
+                    <AvatarFallback className="bg-gray-200">
+                      {session?.user?.name?.split(" ")[0]?.[0]}
+                      {session?.user?.name?.split(" ")[1]?.[0]}
+                    </AvatarFallback>
+                  </Avatar>{" "}
+                  Meu perfil
+                  <ChevronDown
+                    className={`transition-transform duration-200 ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="ml-5">
+                <div className="flex flex-row-reverse items-start">
+                  <div>
+                    <DropdownMenuLabel className="pb-0">
+                      Olá, {session.user.name}!
+                    </DropdownMenuLabel>
+                    <DropdownMenuLabel className="pt-0 text-[0.8rem] font-normal text-gray-500">
+                      {session.user.email}
+                    </DropdownMenuLabel>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link href={"/"} className="flex w-full items-center gap-2">
+                    <Home color="#1a1a1a" /> Início
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href={"/favorites"}
+                    className="flex w-full items-center gap-2"
+                  >
+                    <Star color="#1a1a1a" /> Favoritos
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem>
+                  <Link
+                    href={"/my-orders"}
+                    className="flex w-full items-center gap-2"
+                  >
+                    <Truck color="#1a1a1a" /> Meus pedidos
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href={"/my-addresses"}
+                    className="flex w-full items-center gap-2"
+                  >
+                    <MapPin color="#1a1a1a" /> Meus endereços
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem className="px-0">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      authClient.signOut();
+                      queryClient.removeQueries({
+                        queryKey: getUseCartQueryKey(),
+                        exact: false,
+                      });
+                      toast.info(
+                        "Você deslogou da sua conta. Faça login novamente!",
+                      );
+                    }}
+                    className="flex w-full items-center justify-start px-0 text-sm font-normal text-red-400 hover:bg-red-100 hover:text-red-400"
+                  >
+                    <LogOutIcon
+                      size={10}
+                      className="text-red-400 hover:text-red-500"
+                    />{" "}
+                    Sair
+                  </Button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
+        ) : (
+          <p className="text-[0.9rem] font-medium">Olá, faça seu login!</p>
+        )}
+      </div>
+
       <Link href="/">
-        <Image src="/logo.svg" alt="BEWEAR" width={100} height={26.14} />
+        <Image src="/logo.svg" alt="BEWEAR" width={100} height={50} />
       </Link>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 min-sm:hidden">
         <Cart />
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
@@ -136,7 +264,7 @@ const Header = () => {
                 </div>
               </>
             ) : (
-              <div className="flex items-center justify-between px-5">
+              <div className="flex items-center justify-between px-5 min-sm:hidden">
                 <h2 className="font-semibold">Olá. Faça seu login!</h2>
                 <Button asChild className="rounded-full" size="lg">
                   <Link href="/authentication">
@@ -148,6 +276,10 @@ const Header = () => {
             )}
           </SheetContent>
         </Sheet>
+      </div>
+
+      <div className="hidden items-center gap-2 min-sm:flex">
+        <Cart />
       </div>
     </header>
   );
