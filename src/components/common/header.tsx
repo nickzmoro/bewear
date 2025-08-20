@@ -59,7 +59,7 @@ const Header = () => {
               open={isDropdownOpen}
               onOpenChange={setIsDropdownOpen}
             >
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger className="outline-0">
                 <Button
                   className="flex items-center gap-2 font-medium"
                   variant={"ghost"}

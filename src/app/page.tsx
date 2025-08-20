@@ -13,12 +13,14 @@ export default async function Home() {
       variants: true,
     },
   });
+
   const newlyCreatedProducts = await db.query.productTable.findMany({
     orderBy: [desc(productTable.createdAt)], // ordenar de forma decrescente (mais recente)
     with: {
       variants: true,
     },
   });
+
   const categories = await db.query.categoryTable.findMany();
 
   return (
