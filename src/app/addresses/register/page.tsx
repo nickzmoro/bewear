@@ -1,11 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -14,39 +8,36 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
-import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
-import { useUserAddresses } from "@/hooks/queries/use-shipping-addresses";
-import { shippingAddressTable } from "@/db/schema";
-import { Loader2 } from "lucide-react";
-import { useUpdateCartShippingAddress } from "@/hooks/mutations/use-update-cart-shipping-address";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { formatAddress } from "../../helpers/address";
 import {
   addressFormSchema,
   type AddressFormValues,
 } from "@/lib/address-schema";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
+import { useUpdateCartShippingAddress } from "@/hooks/mutations/use-update-cart-shipping-address";
+import Image from "next/image";
+import Link from "next/link";
 
 type FormValues = AddressFormValues;
 
-interface AddressesProps {
-  shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
-  defaultShippingAddressId: string | null;
-}
-
-const Addresses = ({
-  shippingAddresses,
-  defaultShippingAddressId,
-}: AddressesProps) => {
-  const router = useRouter();
-
-  const [selectedAddress, setSelectedAddress] = useState<string | null>(
-    defaultShippingAddressId || null,
-  );
+const AddressRegisterPage = () => {
   const [addAddressLoading, setAddAddressLoading] = useState(false);
+  const [hasFinishedRegistration, setHasFinishedRegistration] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(addressFormSchema),
@@ -68,9 +59,6 @@ const Addresses = ({
 
   const createAddress = useCreateShippingAddress();
   const updateShipping = useUpdateCartShippingAddress();
-  const { data: addresses, isLoading } = useUserAddresses({
-    initialData: shippingAddresses,
-  });
 
   const onSubmit = (values: FormValues) => {
     setAddAddressLoading(true);
@@ -81,58 +69,28 @@ const Addresses = ({
           {
             onSuccess: () => {
               form.reset();
-              setSelectedAddress(address.id);
               toast.success("Endereço salvo com sucesso!");
+              setHasFinishedRegistration(true);
             },
             onSettled: () => setAddAddressLoading(false),
           },
         );
       },
-      onError: () => setAddAddressLoading(false),
+      onError: () => {
+        setAddAddressLoading(false);
+        toast.error("Erro ao cadastrar endereço. Tente novamente mais tarde.");
+      },
     });
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Identificação</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <RadioGroup
-          value={selectedAddress ?? undefined}
-          onValueChange={setSelectedAddress}
-        >
-          {addresses?.map((address) => {
-            const id = address.id;
-            return (
-              <Card
-                key={id}
-                className="cursor-pointer"
-                onClick={() => setSelectedAddress(id)}
-              >
-                <CardContent className="py-4">
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value={id} id={`address_${id}`} />
-                    <Label htmlFor={`address_${id}`}>
-                      {formatAddress(address)}
-                    </Label>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+    <div className="mt-3 px-5 min-sm:px-10">
+      <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+        Cadastrar novo endereço
+      </h2>
 
-          <Card>
-            <CardContent className="py-1">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="add_new" id="add_new" />
-                <Label htmlFor="add_new">Adicionar novo endereço</Label>
-              </div>
-            </CardContent>
-          </Card>
-        </RadioGroup>
-
-        {selectedAddress === "add_new" && (
+      <Card className="max-w-4xl">
+        <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -161,7 +119,7 @@ const Addresses = ({
                     <FormItem>
                       <FormLabel>Nome completo</FormLabel>
                       <FormControl>
-                        <Input placeholder="Nome completo" {...field} />
+                        <Input placeholder="Ex.: João da Silva" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -248,7 +206,7 @@ const Addresses = ({
                       <FormLabel>Número</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Número"
+                          placeholder="Ex.: 1567"
                           inputMode="numeric"
                           {...field}
                         />
@@ -265,7 +223,7 @@ const Addresses = ({
                     <FormItem>
                       <FormLabel>Complemento</FormLabel>
                       <FormControl>
-                        <Input placeholder="Complemento" {...field} />
+                        <Input placeholder="Ex.: Apto. 20" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -279,7 +237,10 @@ const Addresses = ({
                     <FormItem>
                       <FormLabel>Rua</FormLabel>
                       <FormControl>
-                        <Input placeholder="Rua" {...field} />
+                        <Input
+                          placeholder="Ex.: Avenida Nações Unidas"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -293,7 +254,7 @@ const Addresses = ({
                     <FormItem>
                       <FormLabel>Bairro</FormLabel>
                       <FormControl>
-                        <Input placeholder="Bairro" {...field} />
+                        <Input placeholder="Ex.: Jardim Vermelho" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -307,7 +268,7 @@ const Addresses = ({
                     <FormItem>
                       <FormLabel>Cidade</FormLabel>
                       <FormControl>
-                        <Input placeholder="Cidade" {...field} />
+                        <Input placeholder="Ex.: Jaú" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -321,7 +282,7 @@ const Addresses = ({
                     <FormItem>
                       <FormLabel>Estado</FormLabel>
                       <FormControl>
-                        <Input placeholder="Estado" {...field} />
+                        <Input placeholder="Ex.: São Paulo" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -329,11 +290,11 @@ const Addresses = ({
                 />
               </div>
 
-              <div className="w-full">
+              <div className="flex justify-end pt-4">
                 <Button
                   type="submit"
                   disabled={addAddressLoading}
-                  className="w-full"
+                  className="w-full rounded-full"
                   size="lg"
                 >
                   {addAddressLoading && <Loader2 className="animate-spin" />}
@@ -344,30 +305,50 @@ const Addresses = ({
               </div>
             </form>
           </Form>
-        )}
-        {selectedAddress && selectedAddress !== "add_new" && (
-          <div className="w-full">
-            <Button
-              className="w-full"
-              size="lg"
-              disabled={updateShipping.isPending}
-              onClick={() => {
-                updateShipping.mutate(
-                  { shippingAddressId: selectedAddress },
-                  { onSuccess: () => router.push("/cart/confirmation") },
-                );
-              }}
-            >
-              {updateShipping.isPending && <Loader2 className="animate-spin" />}
-              {updateShipping.isPending
-                ? "Salvando endereço.."
-                : "Ir para pagamento"}
-            </Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      {hasFinishedRegistration && (
+        <Dialog
+          open={hasFinishedRegistration}
+          onOpenChange={setHasFinishedRegistration}
+        >
+          <DialogContent className="text-center">
+            <Image
+              src={"/address-registration.svg"}
+              alt="Sucesso!"
+              width={250}
+              height={250}
+              className="mx-auto"
+            />
+            <DialogTitle className="mt-6 text-2xl">
+              Novo endereço cadastrado
+            </DialogTitle>
+            <DialogDescription className="font-medium">
+              Seu novo endereço foi adicionado com sucesso. Você pode ver a
+              lista de endereços na seção de “Meus endereços”.
+            </DialogDescription>
+
+            <DialogFooter>
+              <div className="flex w-full flex-col space-y-2">
+                <Button className="rounded-full" size="lg" asChild>
+                  <Link href={"/addresses"}>Ver meus endereços</Link>
+                </Button>
+                <Button
+                  className="rounded-full text-[#424242]"
+                  size="lg"
+                  variant="ghost"
+                  asChild
+                >
+                  <Link href={"/"}>Voltar à página inicial</Link>
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
   );
 };
 
-export default Addresses;
+export default AddressRegisterPage;

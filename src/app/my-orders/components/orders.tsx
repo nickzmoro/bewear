@@ -84,11 +84,13 @@ const Orders = ({ orders }: OrdersProps) => {
   return (
     <div className="mt-3 space-y-5">
       <h2 className="flex items-center gap-2 text-xl font-semibold">
-        <BoxIcon size={20} /> Meus pedidos
+        Meus pedidos
       </h2>
 
       {orders.length < 1 && (
-        <p className="text-gray-500">Nenhum pedido foi feito até o momento..</p>
+        <p className="text-sm text-[#646464]">
+          Nenhum pedido foi feito até o momento..
+        </p>
       )}
 
       {orders.map((order) => (

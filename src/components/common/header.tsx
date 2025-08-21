@@ -119,7 +119,7 @@ const Header = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link
-                    href={"/my-addresses"}
+                    href={"/addresses"}
                     className="flex w-full items-center gap-2"
                   >
                     <MapPin color="#1a1a1a" /> Meus endereços
@@ -220,6 +220,15 @@ const Header = () => {
                     >
                       <Link href={"/my-orders"} onClick={closeSheet}>
                         <Truck /> Meus pedidos
+                      </Link>
+                    </Button>
+                    <Button
+                      className="flex w-full items-center justify-start font-medium"
+                      variant="ghost"
+                      asChild
+                    >
+                      <Link href={"/addresses"} onClick={closeSheet}>
+                        <MapPin /> Meus endereços
                       </Link>
                     </Button>
                   </div>

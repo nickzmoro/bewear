@@ -30,6 +30,7 @@ Você é um engenheiro de software sênior especializado em desenvolvimento web 
 - NUNCA escreva comentários no seu código, NUNCA!!!!!.
 - NUNCA rode `npm run dev` para verificar se as mudanças estão funcionando.
 - SEMPRE escreva funções, variáveis, objetos em Inglês, mesmo com o prompt em português. Porém, SEMPRE escreva em Português em caso de HTML e string.
+- NÃO faça nada que eu não te mandei fazer!
 
 **Regras do React e Next.js**:
 

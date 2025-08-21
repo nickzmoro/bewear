@@ -19,6 +19,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { headers } from "next/headers";
+import Link from "next/link";
 
 const MyAddressesPage = async () => {
   const session = await auth.api.getSession({
@@ -41,7 +42,7 @@ const MyAddressesPage = async () => {
       {shippingAddresses.length > 0 ? (
         <>
           {shippingAddresses.map((address) => (
-            <Card className="mt-5">
+            <Card className="mt-5" key={address.id}>
               <CardContent className="flex justify-between gap-2">
                 <div className="flex gap-4">
                   <div>
@@ -93,18 +94,22 @@ const MyAddressesPage = async () => {
             </Card>
           ))}
           <div className="mt-5">
-            <Button size="lg" className="w-full rounded-full">
-              <Plus /> Adicionar endereço
+            <Button size="lg" className="w-full rounded-full" asChild>
+              <Link href={"/addresses/register"}>
+                <Plus /> Adicionar endereço
+              </Link>
             </Button>
           </div>
         </>
       ) : (
-        <div className="flex flex-col gap-5">
-          <p>
+        <div className="mt-5 flex flex-col gap-5">
+          <p className="text-sm text-[#646464]">
             Você ainda não adicionou nenhum endereço. Que tal adicionar um novo?
           </p>
-          <Button size="lg" className="w-full rounded-full">
-            <Plus /> Adicionar endereço
+          <Button size="lg" className="w-full rounded-full" asChild>
+            <Link href={"/addresses/register"}>
+              <Plus /> Adicionar endereço
+            </Link>
           </Button>
         </div>
       )}
