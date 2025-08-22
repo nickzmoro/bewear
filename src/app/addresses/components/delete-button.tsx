@@ -1,22 +1,28 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { db } from "@/db";
-import { shippingAddressTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { useDeleteShippingAddress } from "@/hooks/mutations/use-delete-shipping-address";
 import { Trash2 } from "lucide-react";
-import z from "zod";
+import { toast } from "sonner";
 
 interface DeleteButtonProps {
-  shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
-  address: z.infer<typeof shippingAddressTable>;
+  addressId: string;
 }
 
-const DeleteButton = ({ shippingAddresses, address }: DeleteButtonProps) => {
-  const handleDeleteAddress = async (
-    address: (typeof shippingAddresses)[0],
-  ) => {
-    await db
-      .delete(shippingAddressTable)
-      .where(eq(shippingAddressTable.id, address.id));
+const DeleteButton = ({ addressId }: DeleteButtonProps) => {
+  const deleteShippingAddressMutation = useDeleteShippingAddress(addressId);
+
+  const handleDeleteShippingAddress = () => {
+    deleteShippingAddressMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast.success("Endereço removido com sucesso!");
+      },
+      onError: () => {
+        toast.error(
+          "Endereço não removido, pois você tem um pedido com esse endereço!",
+        );
+      },
+    });
   };
 
   return (
@@ -24,9 +30,11 @@ const DeleteButton = ({ shippingAddresses, address }: DeleteButtonProps) => {
       size="sm"
       variant="ghost"
       className="flex w-full items-center justify-start gap-2 text-red-400 transition-colors duration-200 ease-in-out hover:bg-red-100 hover:text-red-400"
-      onClick={() => handleDeleteAddress(address)}
+      onClick={handleDeleteShippingAddress}
+      disabled={deleteShippingAddressMutation.isPending}
     >
-      <Trash2 size={15} className="text-red-400 hover:text-red-500" /> Excluir
+      <Trash2 size={15} className="text-red-400 hover:text-red-500" />
+      {deleteShippingAddressMutation.isPending ? "Excluindo..." : "Excluir"}
     </Button>
   );
 };
