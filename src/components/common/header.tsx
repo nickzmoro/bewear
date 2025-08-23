@@ -155,7 +155,15 @@ const Header = () => {
             </DropdownMenu>
           </>
         ) : (
-          <p className="text-[0.9rem] font-medium">Olá, faça seu login!</p>
+          <Button
+            variant="ghost"
+            asChild
+            className="flex gap-1 text-[0.9rem] font-medium hover:opacity-90"
+          >
+            <Link href="/authentication">
+              Faça seu login <LogInIcon />
+            </Link>
+          </Button>
         )}
       </div>
 
