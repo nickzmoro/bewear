@@ -33,6 +33,7 @@ export const userRelations = relations(userTable, ({ many, one }) => ({
     references: [cartTable.userId],
   }),
   orders: many(orderTable),
+  favorites: many(favoritesTable),
 }));
 
 export const sessionTable = pgTable("session", {
@@ -110,6 +111,7 @@ export const productRelations = relations(productTable, ({ one, many }) => ({
   }),
   // um produto pode ter VÁRIAS variações
   variants: many(productVariantTable),
+  favorites: many(favoritesTable),
 }));
 
 export const productVariantTable = pgTable("product_variant", {
@@ -300,5 +302,36 @@ export const orderItemRelations = relations(orderItemTable, ({ one }) => ({
   productVariant: one(productVariantTable, {
     fields: [orderItemTable.productVariantId],
     references: [productVariantTable.id],
+  }),
+}));
+
+export const favoritesTable = pgTable(
+  "favorites",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => userTable.id, { onDelete: "cascade" }),
+    productId: uuid("product_id")
+      .notNull()
+      .references(() => productTable.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    userProductUnique: uniqueIndex("favorites_user_product_unique").on(
+      table.userId,
+      table.productId,
+    ),
+  }),
+);
+
+export const favoritesRelations = relations(favoritesTable, ({ one }) => ({
+  user: one(userTable, {
+    fields: [favoritesTable.userId],
+    references: [userTable.id],
+  }),
+  product: one(productTable, {
+    fields: [favoritesTable.productId],
+    references: [productTable.id],
   }),
 }));

@@ -17,38 +17,40 @@ interface ProductItemProps {
 const ProductItem = ({ product, textContainerClassName }: ProductItemProps) => {
   const firstVariant = product.variants[0];
   return (
-    <Link
-      href={`/product-variant/${firstVariant.slug}`}
-      className="group flex flex-col gap-4"
-    >
-      <Image
-        src={firstVariant.imageUrl}
-        alt={firstVariant.name}
-        sizes="100vw"
-        height={0}
-        width={0}
-        className="h-auto w-full rounded-3xl"
-      />
-      <div
-        className={cn(
-          "flex max-w-[200px] flex-col gap-1",
-          textContainerClassName,
-        )}
+    <div className="group">
+      <Link
+        href={`/product-variant/${firstVariant.slug}`}
+        className="flex flex-col gap-4"
       >
-        <p className="truncate text-sm font-medium">{product.name}</p>
-        <p className="text-muted-foreground truncate text-xs font-medium">
-          {product.description}
-        </p>
-        <p className="mt-3 truncate text-sm font-semibold">
-          {formatCentsToBRL(firstVariant.priceInCents)}
-        </p>
-      </div>
-      <div className="pointer-events-none absolute top-3 right-3 opacity-0 transition-opacity duration-100 ease-in-out group-hover:pointer-events-auto group-hover:opacity-100">
+        <Image
+          src={firstVariant.imageUrl}
+          alt={firstVariant.name}
+          sizes="100vw"
+          height={0}
+          width={0}
+          className="h-auto w-full rounded-3xl"
+        />
+        <div
+          className={cn(
+            "flex max-w-[200px] flex-col gap-1",
+            textContainerClassName,
+          )}
+        >
+          <p className="truncate text-sm font-medium">{product.name}</p>
+          <p className="text-muted-foreground truncate text-xs font-medium">
+            {product.description}
+          </p>
+          <p className="mt-3 truncate text-sm font-semibold">
+            {formatCentsToBRL(firstVariant.priceInCents)}
+          </p>
+        </div>
+      </Link>
+      <div className="pointer-events-none absolute top-3 right-3 z-99 opacity-0 transition-opacity duration-100 ease-in-out group-hover:pointer-events-auto group-hover:opacity-100">
         <Button size="icon" className="bg-black">
           <Heart />
         </Button>
       </div>
-    </Link>
+    </div>
   );
 };
 
