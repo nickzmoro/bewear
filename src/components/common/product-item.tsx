@@ -4,6 +4,8 @@ import Link from "next/link";
 import { productTable, productVariantTable } from "@/db/schema";
 import { formatCentsToBRL } from "@/helpers/money";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { Heart } from "lucide-react";
 
 interface ProductItemProps {
   product: typeof productTable.$inferSelect & {
@@ -17,7 +19,7 @@ const ProductItem = ({ product, textContainerClassName }: ProductItemProps) => {
   return (
     <Link
       href={`/product-variant/${firstVariant.slug}`}
-      className="flex flex-col gap-4"
+      className="group flex flex-col gap-4"
     >
       <Image
         src={firstVariant.imageUrl}
@@ -40,6 +42,11 @@ const ProductItem = ({ product, textContainerClassName }: ProductItemProps) => {
         <p className="mt-3 truncate text-sm font-semibold">
           {formatCentsToBRL(firstVariant.priceInCents)}
         </p>
+      </div>
+      <div className="pointer-events-none absolute top-3 right-3 opacity-0 transition-opacity duration-100 ease-in-out group-hover:pointer-events-auto group-hover:opacity-100">
+        <Button size="icon" className="bg-black">
+          <Heart />
+        </Button>
       </div>
     </Link>
   );
