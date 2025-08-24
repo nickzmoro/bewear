@@ -11,7 +11,7 @@ interface PartnerBrandsListProps {
 const PartnerBrandsList = ({ title }: PartnerBrandsListProps) => {
   return (
     <div className="space-y-6">
-      <h3 className="font-semibold min-sm:text-lg">{title}</h3>
+      <h3 className="font-semibold min-sm:text-lg min-lg:text-2xl">{title}</h3>
       <Swiper
         className="mySwiper swiper-h"
         spaceBetween={10}

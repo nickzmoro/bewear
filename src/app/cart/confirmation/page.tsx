@@ -11,6 +11,7 @@ import FinishOrderButton from "./components/finish-order-button";
 import { Suspense } from "react";
 import Loading from "./loading";
 import OrderSteps from "../components/order-steps";
+import { Badge } from "@/components/ui/badge";
 
 const ConfirmationPage = async () => {
   const session = await auth.api.getSession({
@@ -58,11 +59,14 @@ const ConfirmationPage = async () => {
         <OrderSteps hasIdentification hasPayment={false} />
         <Card>
           <CardHeader>
-            <CardTitle>Identificação</CardTitle>
+            <CardTitle className="min-sm:text-lg">Pagamento</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <Card>
-              <CardContent>
+              <CardContent className="flex flex-col items-start gap-5 min-sm:flex-row min-sm:items-center">
+                <Badge className="rounded-full bg-[#ccc] text-xs font-medium">
+                  Identificação
+                </Badge>
                 <p className="text-muted-foreground text-sm">
                   {formatAddress(cart.shippingAddress)}
                 </p>

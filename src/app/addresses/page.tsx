@@ -22,7 +22,7 @@ const MyAddressesPage = async () => {
 
   return (
     <div className="mt-5 flex flex-col px-5 min-sm:items-center min-sm:justify-center min-sm:px-0">
-      <div className="min-sm:min-w-[600px]">
+      <div className="min-sm:min-w-[600px] min-lg:min-w-[900px]">
         <h2 className="mt-5 flex items-center gap-2 text-xl font-semibold min-sm:text-2xl">
           Endereços
         </h2>

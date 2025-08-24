@@ -53,6 +53,20 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
         </div>
 
         <div>
+          <div className="mb-5 flex flex-col gap-4">
+            <div className="flex flex-col">
+              <h3 className="text-lg font-semibold">
+                {productVariant.product.name}
+              </h3>
+              <p className="text-sm text-[#656565]">
+                {productVariant.product.description}
+              </p>
+            </div>
+            <span className="font-semibold">
+              {formatCentsToBRL(productVariant.priceInCents)}
+            </span>
+          </div>
+
           {/* VARIANTES */}
           <p className="mb-3 text-sm font-medium">
             Selecionar variação{" "}

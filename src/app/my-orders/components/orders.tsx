@@ -83,7 +83,7 @@ const Orders = ({ orders }: OrdersProps) => {
 
   return (
     <div className="mt-3 space-y-5">
-      <h2 className="flex items-center gap-2 text-xl font-semibold">
+      <h2 className="flex items-center gap-2 text-xl font-semibold min-sm:text-2xl">
         Meus pedidos
       </h2>
 
