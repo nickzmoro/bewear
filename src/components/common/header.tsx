@@ -226,6 +226,19 @@ const Header = () => {
                       variant="ghost"
                       asChild
                     >
+                      <Link
+                        href={"/favorites"}
+                        className="flex w-full items-center gap-2"
+                      >
+                        <Star color="#1a1a1a" /> Favoritos
+                      </Link>
+                    </Button>
+
+                    <Button
+                      className="flex w-full items-center justify-start font-medium"
+                      variant="ghost"
+                      asChild
+                    >
                       <Link href={"/my-orders"} onClick={closeSheet}>
                         <Truck /> Meus pedidos
                       </Link>
