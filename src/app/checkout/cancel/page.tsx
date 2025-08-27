@@ -33,10 +33,10 @@ const CancelPage = () => {
         <DialogFooter>
           <div className="flex w-full flex-col space-y-2">
             <Button className="rounded-full" variant="destructive" size="lg">
-              <Link href={"/"}>Meus pedidos</Link>
+              <Link href={"/my-orders"}>Meus pedidos</Link>
             </Button>
             <Button className="rounded-full" variant="ghost" size="sm">
-              <Link href={"/my-orders"}>Voltar para a loja</Link>
+              <Link href={"/"}>Voltar para a loja</Link>
             </Button>
           </div>
         </DialogFooter>
