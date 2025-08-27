@@ -64,7 +64,7 @@ const AddressCard = ({
               <EllipsisVertical size={20} />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="mr-3">
+          <DropdownMenuContent className="mr-3 p-0">
             <DropdownMenuLabel>{children}</DropdownMenuLabel>
           </DropdownMenuContent>
         </DropdownMenu>

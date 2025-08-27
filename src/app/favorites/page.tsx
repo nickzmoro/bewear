@@ -17,6 +17,7 @@ const FavoritesPage = async () => {
         <h2 className="mt-5 flex items-center gap-2 text-xl font-semibold min-sm:text-2xl">
           Meus Favoritos
         </h2>
+        <div className="mt-3 h-[1px] w-2/12 bg-[#00000025]"></div>
         <FavoritesClient />
       </div>
     </div>

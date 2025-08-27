@@ -53,7 +53,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
         </div>
 
         <div>
-          <div className="mb-5 flex flex-col gap-4">
+          <div className="mb-5 flex flex-col gap-3">
             <div className="flex flex-col">
               <h3 className="text-lg font-semibold">
                 {productVariant.product.name}
@@ -66,6 +66,8 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
               {formatCentsToBRL(productVariant.priceInCents)}
             </span>
           </div>
+
+          <div className="mb-5 h-[1px] w-2/12 bg-[#00000025]"></div>
 
           {/* VARIANTES */}
           <p className="mb-3 text-sm font-medium">
@@ -80,13 +82,8 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
 
         <ProductActions productVariantId={productVariant.id} />
 
-        <div>
-          {/* DESCRIÇÃO DO PRODUTO */}
-          <p className="text-sm">{productVariant.product.description}</p>
-        </div>
-
-        <div className="mb-10 flex flex-col gap-5">
-          <div className="h-[1px] w-full bg-[#0000005d]"></div>
+        <div className="mt-5 flex flex-col gap-5">
+          <div className="h-[1px] w-2/5 bg-[#00000025]"></div>
           <ProductList
             products={likelyProducts}
             title="Você também pode gostar"

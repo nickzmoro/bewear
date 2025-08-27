@@ -5,6 +5,9 @@ import ProductItem from "@/components/common/product-item";
 import { EmptyState } from "./empty-state";
 import { useFavorites } from "@/hooks/queries/use-favorites";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
 type FavoriteWithProduct = typeof favoritesTable.$inferSelect & {
   product: typeof productTable.$inferSelect & {
@@ -45,7 +48,7 @@ export const FavoritesClient = () => {
   }
 
   return (
-    <div className="mt-10 grid grid-cols-1 gap-6 min-sm:max-w-[600px] min-sm:grid-cols-3 min-lg:max-w-[900px] min-lg:grid-cols-4">
+    <div className="mt-7 grid grid-cols-2 items-center justify-center gap-6 min-sm:max-w-[600px] min-sm:grid-cols-3 min-lg:max-w-[900px] min-lg:grid-cols-4">
       {favorites.map((favorite) => (
         <ProductItem
           key={favorite.id}
@@ -54,6 +57,11 @@ export const FavoritesClient = () => {
           isFavorite={true}
         />
       ))}
+      <div className="flex aspect-square items-center justify-center">
+        <Link href="/" className="bg-muted rounded-full p-2">
+          <Plus size={30} color="#9e9e9e" />
+        </Link>
+      </div>
     </div>
   );
 };

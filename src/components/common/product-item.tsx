@@ -82,10 +82,10 @@ const ProductItem = ({
       </Link>
 
       {!isFavorite ? (
-        <div className="pointer-events-none absolute top-3 right-3 opacity-0 transition-opacity duration-100 ease-in-out group-hover:pointer-events-auto group-hover:opacity-100">
+        <div className="pointer-events-none absolute top-3 right-3 opacity-0 transition-opacity duration-100 ease-in-out group-hover:pointer-events-auto group-hover:opacity-100 max-md:pointer-events-auto max-md:opacity-100 max-sm:top-2 max-sm:right-2">
           <Button
             size="icon"
-            className="rounded-full bg-black"
+            className="hover:bg-primary rounded-full bg-[#252525]"
             onClick={handleAddToFavorites}
             disabled={isAdding}
           >

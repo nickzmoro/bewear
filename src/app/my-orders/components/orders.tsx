@@ -82,10 +82,11 @@ const Orders = ({ orders }: OrdersProps) => {
   };
 
   return (
-    <div className="mt-3 space-y-5">
+    <div className="mt-3">
       <h2 className="flex items-center gap-2 text-xl font-semibold min-sm:text-2xl">
         Meus pedidos
       </h2>
+      <div className="mt-3 h-[1px] w-2/12 bg-[#00000025]"></div>
 
       {orders.length < 1 && (
         <p className="text-sm text-[#646464]">
@@ -93,167 +94,169 @@ const Orders = ({ orders }: OrdersProps) => {
         </p>
       )}
 
-      {orders.map((order) => (
-        <Card key={order.id}>
-          <CardContent className="p-0">
-            <Accordion type="single" collapsible key={order.id}>
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="px-6 py-0 hover:no-underline">
-                  <div className="flex w-full items-center justify-between">
-                    <div className="flex flex-col-reverse gap-3">
-                      <p className="text-sm font-semibold text-gray-800">
-                        Pedido #{order.id.slice(0, 4).toLocaleUpperCase()}
-                      </p>
-                      {order.status === "paid" && (
-                        <Badge className="rounded-full bg-green-100 text-green-800 hover:bg-green-100">
-                          Pago
-                        </Badge>
-                      )}
-                      {order.status === "pending" && (
-                        <Badge
-                          variant="outline"
-                          className="rounded-full bg-gray-100 text-gray-700"
-                        >
-                          Pendente
-                        </Badge>
-                      )}
-                      {order.status === "canceled" && (
-                        <Badge variant="destructive" className="rounded-full">
-                          Cancelado
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <p className="text-[0.8rem] text-gray-600">
-                          {order.createdAt.toLocaleDateString("pt-BR")}
+      <div className="mt-7">
+        {orders.map((order) => (
+          <Card key={order.id} className="mb-5">
+            <CardContent className="p-0">
+              <Accordion type="single" collapsible key={order.id}>
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="px-6 py-0 hover:no-underline">
+                    <div className="flex w-full items-center justify-between">
+                      <div className="flex flex-col-reverse gap-3">
+                        <p className="text-sm font-semibold text-gray-800">
+                          Pedido #{order.id.slice(0, 4).toLocaleUpperCase()}
                         </p>
-                        <p className="text-[0.8rem] font-bold text-gray-800">
-                          {formatCentsToBRL(order.totalPriceInCents)}
-                        </p>
+                        {order.status === "paid" && (
+                          <Badge className="rounded-full bg-green-100 text-green-800 hover:bg-green-100">
+                            Pago
+                          </Badge>
+                        )}
+                        {order.status === "pending" && (
+                          <Badge
+                            variant="outline"
+                            className="rounded-full bg-gray-100 text-gray-700"
+                          >
+                            Pendente
+                          </Badge>
+                        )}
+                        {order.status === "canceled" && (
+                          <Badge variant="destructive" className="rounded-full">
+                            Cancelado
+                          </Badge>
+                        )}
                       </div>
-                    </div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="mt-5 px-6 pb-6">
-                  <div className="space-y-4">
-                    {order.items.map((product) => (
-                      <div
-                        className="flex items-center justify-between"
-                        key={product.id}
-                      >
-                        <div className="flex items-center gap-4">
-                          <Image
-                            src={product.imageUrl}
-                            alt={product.productName}
-                            width={78}
-                            height={78}
-                            className="rounded-lg"
-                          />
-                          <div className="flex flex-col gap-1">
-                            <p className="text-sm font-semibold text-gray-800">
-                              {product.productName}
-                            </p>
-                            <p className="text-muted-foreground text-xs font-medium">
-                              Variação: ({product.productVariantName})
-                            </p>
-                            <p className="text-muted-foreground text-xs font-medium">
-                              {product.quantity}x
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end justify-center gap-2">
-                          <p className="text-sm font-bold text-gray-800">
-                            {formatCentsToBRL(
-                              product.priceInCents * product.quantity,
-                            )}
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <p className="text-[0.8rem] text-gray-600">
+                            {order.createdAt.toLocaleDateString("pt-BR")}
+                          </p>
+                          <p className="text-[0.8rem] font-bold text-gray-800">
+                            {formatCentsToBRL(order.totalPriceInCents)}
                           </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-
-                  <div className="py-5">
-                    <Separator />
-                  </div>
-
-                  <Card className="border-0 shadow-none">
-                    <CardHeader>
-                      <CardTitle className="text-base font-semibold text-gray-800">
-                        Resumo
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="flex justify-between">
-                        <p className="text-sm text-gray-600">Subtotal</p>
-                        <p className="text-sm font-medium text-gray-600">
-                          {formatCentsToBRL(order.totalPriceInCents)}
-                        </p>
-                      </div>
-                      <div className="flex justify-between">
-                        <p className="text-sm text-gray-600">Frete</p>
-                        <p className="text-sm font-medium text-purple-600">
-                          Grátis
-                        </p>
-                      </div>
-                      <div className="flex justify-between">
-                        <p className="text-sm text-gray-600">Total</p>
-                        <p className="text-sm font-semibold text-gray-800">
-                          {formatCentsToBRL(order.totalPriceInCents)}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {order.status === "pending" && (
-                    <div className="mt-6">
-                      <Button
-                        className="w-full rounded-full"
-                        onClick={() => handleCheckout(order.id)}
-                        disabled={isLoading === order.id}
-                      >
-                        {isLoading === order.id && (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        )}
-                        {isLoading === order.id
-                          ? "Processando..."
-                          : "Comprar agora"}
-                      </Button>
                     </div>
-                  )}
+                  </AccordionTrigger>
+                  <AccordionContent className="mt-5 px-6 pb-6">
+                    <div className="space-y-4">
+                      {order.items.map((product) => (
+                        <div
+                          className="flex items-center justify-between"
+                          key={product.id}
+                        >
+                          <div className="flex items-center gap-4">
+                            <Image
+                              src={product.imageUrl}
+                              alt={product.productName}
+                              width={78}
+                              height={78}
+                              className="rounded-lg"
+                            />
+                            <div className="flex flex-col gap-1">
+                              <p className="text-sm font-semibold text-gray-800">
+                                {product.productName}
+                              </p>
+                              <p className="text-muted-foreground text-xs font-medium">
+                                Variação: ({product.productVariantName})
+                              </p>
+                              <p className="text-muted-foreground text-xs font-medium">
+                                {product.quantity}x
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end justify-center gap-2">
+                            <p className="text-sm font-bold text-gray-800">
+                              {formatCentsToBRL(
+                                product.priceInCents * product.quantity,
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
-                  {order.status === "paid" && (
-                    <Card className="mt-5 shadow-sm">
+                    <div className="py-5">
+                      <Separator />
+                    </div>
+
+                    <Card className="border-0 shadow-none">
                       <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-base font-semibold text-gray-800">
-                          <BoxIcon size={18} /> Endereço de entrega
+                        <CardTitle className="text-base font-semibold text-gray-800">
+                          Resumo
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="space-y-1 text-gray-500">
-                        <p>
-                          {order.recipientName} - CPF: {order.cpf.slice(0, 3)}.
-                          {order.cpf.slice(3, 6)}.{order.cpf.slice(6, 9)}-
-                          {order.cpf.slice(9, 11)}
-                        </p>
-                        <p>
-                          {order.street} {order.number}, {order.neighborhood}
-                        </p>
-                        <p>
-                          {order.city}, {order.state} - {order.country}
-                        </p>
-                        <p>
-                          CEP: {order.zipCode.slice(0, 5)}-
-                          {order.zipCode.slice(5, 8)}
-                        </p>
+                      <CardContent className="space-y-2">
+                        <div className="flex justify-between">
+                          <p className="text-sm text-gray-600">Subtotal</p>
+                          <p className="text-sm font-medium text-gray-600">
+                            {formatCentsToBRL(order.totalPriceInCents)}
+                          </p>
+                        </div>
+                        <div className="flex justify-between">
+                          <p className="text-sm text-gray-600">Frete</p>
+                          <p className="text-sm font-medium text-purple-600">
+                            Grátis
+                          </p>
+                        </div>
+                        <div className="flex justify-between">
+                          <p className="text-sm text-gray-600">Total</p>
+                          <p className="text-sm font-semibold text-gray-800">
+                            {formatCentsToBRL(order.totalPriceInCents)}
+                          </p>
+                        </div>
                       </CardContent>
                     </Card>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </CardContent>
-        </Card>
-      ))}
+
+                    {order.status === "pending" && (
+                      <div className="mt-6">
+                        <Button
+                          className="w-full rounded-full"
+                          onClick={() => handleCheckout(order.id)}
+                          disabled={isLoading === order.id}
+                        >
+                          {isLoading === order.id && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          )}
+                          {isLoading === order.id
+                            ? "Processando..."
+                            : "Comprar agora"}
+                        </Button>
+                      </div>
+                    )}
+
+                    {order.status === "paid" && (
+                      <Card className="mt-5 shadow-sm">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2 text-base font-semibold text-gray-800">
+                            <BoxIcon size={18} /> Endereço de entrega
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-1 text-gray-500">
+                          <p>
+                            {order.recipientName} - CPF: {order.cpf.slice(0, 3)}
+                            .{order.cpf.slice(3, 6)}.{order.cpf.slice(6, 9)}-
+                            {order.cpf.slice(9, 11)}
+                          </p>
+                          <p>
+                            {order.street} {order.number}, {order.neighborhood}
+                          </p>
+                          <p>
+                            {order.city}, {order.state} - {order.country}
+                          </p>
+                          <p>
+                            CEP: {order.zipCode.slice(0, 5)}-
+                            {order.zipCode.slice(5, 8)}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
