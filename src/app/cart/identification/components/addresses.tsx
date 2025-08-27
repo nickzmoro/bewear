@@ -95,7 +95,7 @@ const Addresses = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Identificação</CardTitle>
+        <CardTitle className="text-xl max-md:text-lg">Identificação</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <RadioGroup
