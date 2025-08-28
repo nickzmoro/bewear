@@ -11,6 +11,8 @@ import AddToCartButton from "./components/add-to-cart-button";
 import ProductActions from "./components/product-actions";
 import { Suspense } from "react";
 import Loading from "./loading";
+import CategoryList from "@/components/common/category-list";
+import { Separator } from "@/components/ui/separator";
 
 interface ProductVariantPageProps {
   params: Promise<{ slug: string }>;
@@ -40,57 +42,66 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
     },
   });
 
+  const categories = await db.query.categoryTable.findMany();
+
   return (
-    <div className="flex flex-col space-y-6 px-5">
-      <Suspense fallback={<Loading />}>
-        <div className="relative h-[380px] w-full rounded-3xl">
-          <Image
-            src={productVariant.imageUrl}
-            alt={productVariant.name}
-            fill
-            className="rounded-3xl object-cover"
-          />
-        </div>
+    <>
+      <CategoryList categories={categories} />
+      <Separator className="mb-5 max-sm:hidden" />
+      <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col space-y-8 py-6">
+          <Suspense fallback={<Loading />}>
+            <div className="grid grid-cols-1 gap-6 min-lg:min-h-[650px] lg:grid-cols-2 lg:gap-12">
+              <div className="relative aspect-square w-full rounded-3xl min-lg:aspect-auto">
+                <Image
+                  src={productVariant.imageUrl}
+                  alt={productVariant.name}
+                  fill
+                  className="rounded-3xl object-cover"
+                />
+              </div>
 
-        <div>
-          <div className="mb-5 flex flex-col gap-3">
-            <div className="flex flex-col">
-              <h3 className="text-lg font-semibold">
-                {productVariant.product.name}
-              </h3>
-              <p className="text-sm text-[#656565]">
-                {productVariant.product.description}
-              </p>
+              <div className="flex flex-col justify-start">
+                <div className="mb-6 flex flex-col gap-4">
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-xl font-semibold max-sm:text-lg min-lg:text-2xl">
+                      {productVariant.product.name}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-[#656565]">
+                      {productVariant.product.description}
+                    </p>
+                  </div>
+                  <span className="text-xl font-semibold max-sm:text-lg">
+                    {formatCentsToBRL(productVariant.priceInCents)}
+                  </span>
+                </div>
+
+                <VariantSelector
+                  variants={productVariant.product.variants}
+                  selectedVariantSlug={productVariant.slug}
+                />
+
+                <div className="hidden min-sm:mt-6 min-sm:flex min-sm:flex-col min-sm:gap-6">
+                  <ProductActions productVariantId={productVariant.id} />
+                </div>
+              </div>
             </div>
-            <span className="font-semibold">
-              {formatCentsToBRL(productVariant.priceInCents)}
-            </span>
-          </div>
 
-          <div className="mb-5 h-[1px] w-2/12 bg-[#00000025]"></div>
+            <div className="hidden max-sm:mt-6 max-sm:flex max-sm:flex-col max-sm:gap-6">
+              <ProductActions productVariantId={productVariant.id} />
+            </div>
 
-          {/* VARIANTES */}
-          <p className="mb-3 text-sm font-medium">
-            Selecionar variação{" "}
-            <span className="text-primary">- {productVariant.name}</span>
-          </p>
-          <VariantSelector
-            variants={productVariant.product.variants}
-            selectedVariantSlug={productVariant.slug}
-          />
+            <div className="mt-8 flex flex-col gap-6">
+              <div className="h-[1px] w-2/12 bg-[#00000025]"></div>
+              <ProductList
+                products={likelyProducts}
+                title="Você também pode gostar"
+              />
+            </div>
+          </Suspense>
         </div>
-
-        <ProductActions productVariantId={productVariant.id} />
-
-        <div className="mt-5 flex flex-col gap-5">
-          <div className="h-[1px] w-2/5 bg-[#00000025]"></div>
-          <ProductList
-            products={likelyProducts}
-            title="Você também pode gostar"
-          />
-        </div>
-      </Suspense>
-    </div>
+      </div>
+    </>
   );
 };
 

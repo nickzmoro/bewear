@@ -25,7 +25,7 @@ const VariantSelector = ({
             alt={variant.name}
             width={68}
             height={68}
-            className={`rounded-xl border-2 transition-all duration-100 ease-in-out ${selectedVariantSlug === variant.slug && "border-[#00000073]"}`}
+            className={`rounded-xl border-2 transition-all duration-100 ease-in-out ${selectedVariantSlug === variant.slug && "border-[#cfcfcf]"}`}
           />
         </Link>
       ))}
