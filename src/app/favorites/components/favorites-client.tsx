@@ -20,7 +20,7 @@ export const FavoritesClient = () => {
 
   if (isLoading) {
     return (
-      <div className="mt-10 grid grid-cols-1 gap-6 min-sm:max-w-[600px] min-sm:grid-cols-3 min-lg:max-w-[900px] min-lg:grid-cols-4">
+      <div className="mt-7 grid grid-cols-2 items-center justify-center gap-6 min-sm:max-w-[600px] min-sm:grid-cols-3 min-lg:max-w-[900px] min-lg:grid-cols-4">
         {Array.from({ length: 8 }).map((_, index) => (
           <div key={index} className="flex flex-col gap-4">
             <Skeleton className="h-48 w-full rounded-3xl" />
@@ -55,6 +55,7 @@ export const FavoritesClient = () => {
           product={favorite.product}
           favoriteId={favorite.id}
           isFavorite={true}
+          showFavoriteActions={true}
         />
       ))}
       <div className="flex aspect-square items-center justify-center">
