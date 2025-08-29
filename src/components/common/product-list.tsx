@@ -48,7 +48,11 @@ const ProductList = ({ title, products }: ProductListProps) => {
       >
         {products.map((product) => (
           <SwiperSlide key={product.id}>
-            <ProductItem product={product} showFavoriteActions />
+            <ProductItem
+              product={product}
+              showFavoriteActions={true}
+              isFavorite={false}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

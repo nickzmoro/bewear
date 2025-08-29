@@ -45,6 +45,7 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
               key={product.id}
               product={product}
               textContainerClassName="max-w-full"
+              showFavoriteActions={true}
             />
           ))}
         </div>
