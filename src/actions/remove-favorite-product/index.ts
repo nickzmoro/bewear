@@ -19,7 +19,7 @@ export const removeFavoriteProduct = async (
     headers: await headers(),
   });
   if (!session?.user) {
-    throw new Error("Unauthorized");
+    throw new Error("Você precisa estar logado para fazer esta ação.");
   }
 
   const favorite = await db.query.favoritesTable.findFirst({
@@ -30,7 +30,7 @@ export const removeFavoriteProduct = async (
   });
 
   if (!favorite) {
-    throw new Error("Favorite not found");
+    throw new Error("Produto favoritado não encontrado");
   }
 
   await db.delete(favoritesTable).where(eq(favoritesTable.id, data.id));

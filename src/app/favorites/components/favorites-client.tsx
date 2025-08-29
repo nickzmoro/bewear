@@ -53,6 +53,8 @@ export const FavoritesClient = () => {
         <ProductItem
           key={favorite.id}
           product={favorite.product}
+          favoriteId={favorite.id}
+          isFavorite={true}
           showFavoriteActions={true}
         />
       ))}
