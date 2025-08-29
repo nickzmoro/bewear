@@ -13,16 +13,12 @@ interface ProductItemProps {
     variants: (typeof productVariantTable.$inferSelect)[];
   };
   textContainerClassName?: string;
-  favoriteId?: string;
-  isFavorite?: boolean;
   showFavoriteActions?: boolean;
 }
 
 const ProductItem = ({
   product,
   textContainerClassName,
-  favoriteId,
-  isFavorite = false,
   showFavoriteActions = false,
 }: ProductItemProps) => {
   const firstVariant = product.variants[0];
@@ -54,13 +50,7 @@ const ProductItem = ({
         </div>
       </Link>
 
-      {showFavoriteActions && (
-        <ProductItemFavoriteActions
-          product={product}
-          favoriteId={favoriteId}
-          isFavorite={isFavorite}
-        />
-      )}
+      {showFavoriteActions && <ProductItemFavoriteActions product={product} />}
     </div>
   );
 };
