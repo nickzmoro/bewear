@@ -34,33 +34,31 @@ export const ProductItemFavoriteActions = ({
     useRemoveFavoriteProduct();
 
   const isProductFavorited = useMemo(() => {
-    if (isFavorite) return true;
-    if (!favorites) return false;
-    return favorites.some((fav) => fav.product.id === product.id);
+    return isFavorite
+      ? true
+      : !favorites
+        ? false
+        : favorites.some((fav) => fav.product.id === product.id);
   }, [favorites, product.id, isFavorite]);
 
   const currentFavoriteId = useMemo(() => {
-    if (isFavorite) return favoriteId;
-    if (!favorites) return undefined;
-    const favorite = favorites.find(
-      (favorite) => favorite.product.id === product.id,
-    );
-    return favorite?.id;
+    return isFavorite
+      ? favoriteId
+      : !favorites
+        ? undefined
+        : favorites.find((favorite) => favorite.product.id === product.id)?.id;
   }, [favorites, isFavorite, product.id, favoriteId]);
 
   const handleAddToFavorites = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    if (isProductFavorited) return;
-    addToFavorites({ productId: product.id });
+    isProductFavorited ? undefined : addToFavorites({ productId: product.id });
   };
 
   const handleRemoveFromFavorites = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    if (currentFavoriteId) {
-      removeFromFavorites({ id: currentFavoriteId });
-    }
+    currentFavoriteId && removeFromFavorites({ id: currentFavoriteId });
   };
 
   if (isProductFavorited) {
