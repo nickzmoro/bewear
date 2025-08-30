@@ -54,13 +54,7 @@ const ProductItem = ({
         </div>
       </Link>
 
-      {showFavoriteActions && (
-        <ProductItemFavoriteActions
-          product={product}
-          favoriteId={favoriteId}
-          isFavorite={isFavorite}
-        />
-      )}
+      {showFavoriteActions && <ProductItemFavoriteActions product={product} />}
     </div>
   );
 };
