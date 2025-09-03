@@ -1,9 +1,16 @@
 import crypto from "crypto";
 
 import { db } from "@/db";
-import { categoryTable, productTable, productVariantTable } from "./schema";
+import {
+  categoryTable,
+  markTable,
+  orderItemTable,
+  orderTable,
+  productTable,
+  productVariantTable,
+} from "./schema";
 
-// npx tsx --env-file=.env src/db/seeds.ts -> para rodar novamente
+// npx tsx --env-file=.env src/db/seed.ts -> para rodar novamente
 
 const productImages = {
   Mochila: {
@@ -277,6 +284,44 @@ const categories = [
   },
 ];
 
+const marks = [
+  {
+    name: "Nike",
+    imageUrl:
+      "https://logoeps.com/wp-content/uploads/2013/03/nike-vector-logo.png",
+  },
+  {
+    name: "Adidas",
+    imageUrl:
+      "https://logoeps.com/wp-content/uploads/2012/11/adidas-vector-logo.png",
+  },
+  {
+    name: "New Balance",
+    imageUrl:
+      "https://logos-world.net/wp-content/uploads/2020/06/Jordan-Logo.png",
+  },
+  {
+    name: "Puma",
+    imageUrl:
+      "https://logoeps.com/wp-content/uploads/2012/12/puma-vector-logo.png",
+  },
+  {
+    name: "Zara",
+    imageUrl:
+      "https://logoeps.com/wp-content/uploads/2012/12/puma-vector-logo.png",
+  },
+  {
+    name: "Converse",
+    imageUrl:
+      "https://logoeps.com/wp-content/uploads/2012/12/puma-vector-logo.png",
+  },
+  {
+    name: "Polo Wear",
+    imageUrl:
+      "https://logoeps.com/wp-content/uploads/2012/12/puma-vector-logo.png",
+  },
+];
+
 const products = [
   // Acessórios
   {
@@ -284,6 +329,7 @@ const products = [
     description:
       "Mochila resistente e confortável, ideal para o dia a dia e viagens.",
     categoryName: "Acessórios",
+    markName: "Nike",
     variants: [
       { color: "Preta", price: 12999 },
       { color: "Branca", price: 12999 },
@@ -293,6 +339,7 @@ const products = [
     name: "Meia Alta",
     description: "Meia alta de algodão, confortável e durável.",
     categoryName: "Acessórios",
+    markName: "Nike",
     variants: [
       { color: "Branca", price: 1999 },
       { color: "Preta", price: 1999 },
@@ -302,6 +349,7 @@ const products = [
     name: "Boné Nocta",
     description: "Boné Nocta com design moderno e ajuste confortável.",
     categoryName: "Acessórios",
+    markName: "Nike",
     variants: [
       { color: "Preto", price: 8999 },
       { color: "Vinho", price: 8999 },
@@ -312,6 +360,7 @@ const products = [
     name: "Boné Curvo",
     description: "Boné com aba curva, estilo clássico e versátil.",
     categoryName: "Acessórios",
+    markName: "Adidas",
     variants: [
       { color: "Azul", price: 7999 },
       { color: "Bege", price: 7999 },
@@ -325,6 +374,7 @@ const products = [
     description:
       "Shorts esportivo para atividades físicas, com tecido que absorve o suor.",
     categoryName: "Bermuda & Shorts",
+    markName: "Nike",
     variants: [
       { color: "Preto", price: 6999 },
       { color: "Azul", price: 6999 },
@@ -335,6 +385,7 @@ const products = [
     name: "Shorts Core",
     description: "Shorts casual confortável, perfeito para o dia a dia.",
     categoryName: "Bermuda & Shorts",
+    markName: "Adidas",
     variants: [
       { color: "Verde", price: 5999 },
       { color: "Preto", price: 5999 },
@@ -346,6 +397,7 @@ const products = [
     description:
       "Shorts com design moderno e confortável, ideal para diversas ocasiões.",
     categoryName: "Bermuda & Shorts",
+    markName: "Nike",
     variants: [
       { color: "Marrom", price: 7499 },
       { color: "Preto", price: 7499 },
@@ -357,6 +409,7 @@ const products = [
     description:
       "Bermuda premium com qualidade superior e design diferenciado.",
     categoryName: "Bermuda & Shorts",
+    markName: "Puma",
     variants: [
       { color: "Verde", price: 8999 },
       { color: "Preta", price: 8999 },
@@ -370,6 +423,7 @@ const products = [
     description:
       "Calça esportiva Nike Club, confortável e versátil para treinos e uso casual.",
     categoryName: "Calças",
+    markName: "Nike",
     variants: [
       { color: "Bege", price: 15999 },
       { color: "Preta", price: 15999 },
@@ -381,6 +435,7 @@ const products = [
     description:
       "Calça de malha com tecido macio e confortável, ideal para relaxar.",
     categoryName: "Calças",
+    markName: "Adidas",
     variants: [
       { color: "Preta", price: 12999 },
       { color: "Branca", price: 12999 },
@@ -392,6 +447,7 @@ const products = [
     description:
       "Calça com design urbano e moderno, perfeita para o street style.",
     categoryName: "Calças",
+    markName: "Puma",
     variants: [
       { color: "Bege", price: 13999 },
       { color: "Branca", price: 13999 },
@@ -403,6 +459,7 @@ const products = [
     description:
       "Calça Jordan com qualidade premium e design icônico da marca.",
     categoryName: "Calças",
+    markName: "New Balance",
     variants: [
       { color: "Verde", price: 18999 },
       { color: "Preta", price: 18999 },
@@ -416,6 +473,7 @@ const products = [
     description:
       "Camiseta ACG com design técnico e material de alta qualidade.",
     categoryName: "Camisetas",
+    markName: "New Balance",
     variants: [
       { color: "Bege", price: 6999 },
       { color: "Preta", price: 6999 },
@@ -427,6 +485,7 @@ const products = [
     description:
       "Camiseta para corrida com tecido respirável e conforto superior.",
     categoryName: "Camisetas",
+    markName: "Polo Wear",
     variants: [
       { color: "Preta", price: 5999 },
       { color: "Azul", price: 5999 },
@@ -437,6 +496,7 @@ const products = [
     description:
       "Camiseta esportiva para atividades físicas com tecnologia Dri-FIT.",
     categoryName: "Camisetas",
+    markName: "Converse",
     variants: [
       { color: "Branca", price: 5499 },
       { color: "Preta", price: 5499 },
@@ -447,6 +507,7 @@ const products = [
     description:
       "Camiseta com estampa inspirada na natureza, confortável e estilosa.",
     categoryName: "Camisetas",
+    markName: "Puma",
     variants: [
       { color: "Preta", price: 6499 },
       { color: "Azul", price: 6499 },
@@ -459,6 +520,7 @@ const products = [
     description:
       "Jaqueta corta-vento leve e resistente, ideal para atividades ao ar livre.",
     categoryName: "Blusas",
+    markName: "Converse",
     variants: [
       { color: "Preto", price: 19999 },
       { color: "Branco", price: 19999 },
@@ -469,6 +531,7 @@ const products = [
     description:
       "Jaqueta Windrunner com design clássico e proteção contra o vento.",
     categoryName: "Blusas",
+    markName: "Zara",
     variants: [
       { color: "Azul", price: 22999 },
       { color: "Bege", price: 22999 },
@@ -479,6 +542,7 @@ const products = [
     description:
       "Jaqueta com estilo urbano e moderno, perfeita para compor looks casuais.",
     categoryName: "Blusas",
+    markName: "Zara",
     variants: [
       { color: "Marrom", price: 17999 },
       { color: "Cinza", price: 17999 },
@@ -488,6 +552,7 @@ const products = [
     name: "Jaqueta Nike Club",
     description: "Jaqueta Nike Club com qualidade premium e design atemporal.",
     categoryName: "Blusas",
+    markName: "Nike",
     variants: [
       { color: "Azul", price: 25999 },
       { color: "Amarela", price: 25999 },
@@ -500,6 +565,7 @@ const products = [
     description:
       "Tênis Nike Vomero com tecnologia de amortecimento superior para corridas.",
     categoryName: "Tênis",
+    markName: "Nike",
     variants: [
       { color: "Preto", price: 79999 },
       { color: "Branco", price: 79999 },
@@ -510,6 +576,7 @@ const products = [
     name: "Tênis Nike Panda",
     description: "Tênis Nike com design Panda icônico, confortável e estiloso.",
     categoryName: "Tênis",
+    markName: "Nike",
     variants: [
       { color: "Verde", price: 69999 },
       { color: "Azul", price: 69999 },
@@ -521,6 +588,7 @@ const products = [
     description:
       "Tênis Nike Air Force 1, um clássico atemporal com design icônico.",
     categoryName: "Tênis",
+    markName: "Nike",
     variants: [
       { color: "Preto", price: 89999 },
       { color: "Branco", price: 89999 },
@@ -530,6 +598,7 @@ const products = [
     name: "Tênis Nike Dunk Low",
     description: "Tênis Nike Dunk Low com design retrô e conforto moderno.",
     categoryName: "Tênis",
+    markName: "Nike",
     variants: [
       { color: "Branco", price: 75999 },
       { color: "Preto", price: 75999 },
@@ -544,9 +613,10 @@ async function main() {
   try {
     // Limpar dados existentes
     console.log("🧹 Limpando dados existentes...");
-    await db.delete(productVariantTable);
     await db.delete(productTable);
+    await db.delete(productVariantTable);
     await db.delete(categoryTable);
+    await db.delete(markTable);
     console.log("✅ Dados limpos com sucesso!");
 
     // Inserir categorias primeiro
@@ -568,16 +638,39 @@ async function main() {
       categoryMap.set(categoryData.name, categoryId);
     }
 
+    // Inserir marcas
+    const markMap = new Map<string, string>();
+
+    console.log("📂 Criando marcas...");
+    for (const markData of marks) {
+      const markId = crypto.randomUUID();
+
+      console.log(`  📁 Criando marca: ${markData.name}`);
+
+      await db.insert(markTable).values({
+        id: markId,
+        name: markData.name,
+        imageUrl: markData.imageUrl,
+      });
+
+      markMap.set(markData.name, markId);
+    }
+
     // Inserir produtos
     for (const productData of products) {
       const productId = crypto.randomUUID();
       const productSlug = generateSlug(productData.name);
       const categoryId = categoryMap.get(productData.categoryName);
+      const markId = markMap.get(productData.markName);
 
       if (!categoryId) {
         throw new Error(
           `Categoria "${productData.categoryName}" não encontrada`,
         );
+      }
+
+      if (!markId) {
+        throw new Error(`Marca "${productData.markName}" não encontrada`);
       }
 
       console.log(`📦 Criando produto: ${productData.name}`);
@@ -588,6 +681,7 @@ async function main() {
         slug: productSlug,
         description: productData.description,
         categoryId: categoryId,
+        markId: markId,
       });
 
       // Inserir variantes do produto

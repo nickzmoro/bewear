@@ -80,15 +80,25 @@ export const verificationTable = pgTable("verification", {
   ),
 });
 
+export const markTable = pgTable("mark", {
+  id: uuid().primaryKey().defaultRandom(),
+  name: text().notNull().unique(),
+  imageUrl: text("image_url").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const markRelations = relations(markTable, ({ many }) => ({
+  products: many(productTable),
+}));
+
 export const categoryTable = pgTable("category", {
   id: uuid().primaryKey().defaultRandom(),
   name: text().notNull(),
   slug: text().notNull().unique(),
-  createdAt: timestamp("created_at").notNull().defaultNow(), // data de acordo com a criação dessa categoria
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const categoryRelations = relations(categoryTable, ({ many }) => ({
-  // uma categoria tem VÁRIOS produtos
   products: many(productTable),
 }));
 
@@ -96,20 +106,25 @@ export const productTable = pgTable("product", {
   id: uuid().primaryKey().defaultRandom(),
   categoryId: uuid("category_id")
     .notNull()
-    .references(() => categoryTable.id, { onDelete: "set null" }), // categoryId será o ID "estrangeiro" do categoryTable.id e o onDelete "cascade" significa que quando eu excluir um produto, as variantes também serão excluídas.
+    .references(() => categoryTable.id, { onDelete: "set null" }),
+  markId: uuid("mark_id").references(() => markTable.id, {
+    onDelete: "cascade",
+  }),
   name: text().notNull(),
-  slug: text().notNull().unique(), // slug é isso: "/tenis-preto-top-das-galaxias" (SEO) - único
+  slug: text().notNull().unique(),
   description: text().notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(), // data de acordo com a criação desse produto
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const productRelations = relations(productTable, ({ one, many }) => ({
-  // um produto só tem UMA categoria
   category: one(categoryTable, {
     fields: [productTable.categoryId],
-    references: [categoryTable.id], // referenciando o productTable.categoryId ao categoryTable.id
+    references: [categoryTable.id],
   }),
-  // um produto pode ter VÁRIAS variações
+  mark: one(markTable, {
+    fields: [productTable.markId],
+    references: [markTable.id],
+  }),
   variants: many(productVariantTable),
   favorites: many(favoritesTable),
 }));
