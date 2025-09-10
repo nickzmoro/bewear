@@ -11,6 +11,7 @@ import {
   ClockArrowUp,
   FilterIcon,
   SlidersHorizontal,
+  Trash2,
   X,
 } from "lucide-react";
 import {
@@ -29,6 +30,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 interface CatalogClientProps {
   marks: any[];
@@ -58,6 +65,8 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
         : prev[filterType].filter((item) => item !== itemName),
     }));
   };
+
+  console.log(filters);
 
   const filterProductsByMarkAndCategory = (products: any[]) => {
     return products.filter((product) => {
@@ -137,6 +146,8 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
     setDefaultOrdering(orderingName);
   };
 
+  console.log(getFilteredAndSortedProducts);
+
   return (
     <>
       <Separator />
@@ -203,7 +214,29 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
                     className="rounded-full px-3 py-2 text-sm"
                   >
                     {markName}
-                    <X />
+                    <HoverCard>
+                      <HoverCardTrigger className="flex items-center justify-center">
+                        <Button
+                          size={"icon"}
+                          variant="ghost"
+                          onClick={() => {
+                            handleFilterChange("marks", markName, false);
+                          }}
+                          className="h-4 w-4"
+                        >
+                          <X />
+                        </Button>
+                      </HoverCardTrigger>
+                      <HoverCardContent
+                        className="flex w-fit items-center gap-2 px-3 py-1"
+                        side="top"
+                      >
+                        <Trash2 size={14} color="#ff000075" />
+                        <p className="text-muted-foreground text-sm select-none">
+                          Excluir
+                        </p>
+                      </HoverCardContent>
+                    </HoverCard>
                   </Badge>
                 ))}
                 {filters.categories.map((categoryName) => (
@@ -213,7 +246,14 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
                     className="rounded-full px-3 py-2 text-sm"
                   >
                     {categoryName}
-                    <X />
+                    <Button
+                      size={"icon"}
+                      onClick={() =>
+                        handleFilterChange("categories", categoryName, false)
+                      }
+                    >
+                      <X />
+                    </Button>
                   </Badge>
                 ))}
               </div>
