@@ -5,6 +5,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
 import ProductItem from "./product-item";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
 interface ProductListProps {
   title: string;
@@ -16,9 +18,21 @@ interface ProductListProps {
 const ProductList = ({ title, products }: ProductListProps) => {
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold min-sm:text-lg min-lg:text-2xl">
-        {title}
-      </h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold min-sm:text-lg min-lg:text-2xl">
+          {title}
+        </h3>
+        <Link
+          href="/catalog"
+          className="group flex items-center gap-1 pr-10 font-medium hover:text-[#202020]"
+        >
+          Ver todos
+          <ChevronRight
+            size={16}
+            className="duration-200 ease-in-out group-hover:translate-x-0.5"
+          />
+        </Link>
+      </div>
       <Swiper
         className="mySwiper swiper-h"
         spaceBetween={50}
