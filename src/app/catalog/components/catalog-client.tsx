@@ -246,14 +246,33 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
                     className="rounded-full px-3 py-2 text-sm"
                   >
                     {categoryName}
-                    <Button
-                      size={"icon"}
-                      onClick={() =>
-                        handleFilterChange("categories", categoryName, false)
-                      }
-                    >
-                      <X />
-                    </Button>
+                    <HoverCard>
+                      <HoverCardTrigger className="flex items-center justify-center">
+                        <Button
+                          size={"icon"}
+                          variant="ghost"
+                          onClick={() => {
+                            handleFilterChange(
+                              "categories",
+                              categoryName,
+                              false,
+                            );
+                          }}
+                          className="h-4 w-4"
+                        >
+                          <X />
+                        </Button>
+                      </HoverCardTrigger>
+                      <HoverCardContent
+                        className="flex w-fit items-center gap-2 px-3 py-1"
+                        side="top"
+                      >
+                        <Trash2 size={14} color="#ff000075" />
+                        <p className="text-muted-foreground text-sm select-none">
+                          Excluir
+                        </p>
+                      </HoverCardContent>
+                    </HoverCard>
                   </Badge>
                 ))}
               </div>
