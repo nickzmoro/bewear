@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import FilterCheckbox from "./filter-checkbox";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -40,7 +40,7 @@ type FilterType = "marks" | "categories";
 
 const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
   const [isOpenDropdown, setIsOpenDropdown] = useState(false);
-  const [defaultOrdening, setDefaultOrdening] = useState("Padrão");
+  const [defaultOrdering, setDefaultOrdering] = useState("Padrão");
   const [filters, setFilters] = useState<Record<FilterType, string[]>>({
     marks: [],
     categories: [],
@@ -59,11 +59,7 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
     }));
   };
 
-  const getFilteredProducts = () => {
-    if (filters.marks.length === 0 && filters.categories.length === 0) {
-      return products;
-    }
-
+  const filterProductsByMarkAndCategory = (products: any[]) => {
     return products.filter((product) => {
       const matchesMark =
         filters.marks.length === 0 ||
@@ -77,7 +73,69 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
     });
   };
 
-  const filteredProducts = getFilteredProducts();
+  const filterProductsResult = (products: any[]) => {
+    filters.marks.length === 0 && filters.categories.length === 0 && products;
+    return filterProductsByMarkAndCategory(products);
+  };
+
+  const sortProductsByNewest = (sorted: any[]) => {
+    sorted.sort(
+      (productA: any, productB: any): number =>
+        new Date(productA.createdAt).getTime() -
+        new Date(productB.createdAt).getTime(),
+    );
+  };
+
+  const sortProductsByLeastRecent = (sorted: any[]) => {
+    sorted.sort(
+      (productA: any, productB: any) =>
+        productB.variants[0].priceInCents - productA.variants[0].priceInCents,
+    );
+  };
+
+  const sortProductsByHighestPrice = (sorted: any[]) => {
+    sorted.sort(
+      (productA: any, productB: any) =>
+        productB.variants[0].priceInCents - productA.variants[0].priceInCents,
+    );
+  };
+
+  const sortProductsByLowestPrice = (sorted: any[]) => {
+    sorted.sort(
+      (productA: any, productB: any) =>
+        productA.variants[0].priceInCents - productB.variants[0].priceInCents,
+    );
+  };
+
+  const sortProductsByOrdering = (products: any[], ordering: string) => {
+    const sorted = [...products];
+
+    switch (ordering) {
+      case "Mais recentes":
+        sortProductsByNewest(sorted);
+        break;
+      case "Menos recentes":
+        sortProductsByLeastRecent(sorted);
+        break;
+      case "Maior preço":
+        sortProductsByHighestPrice(sorted);
+        break;
+      case "Menor preço":
+        sortProductsByLowestPrice(sorted);
+        break;
+    }
+
+    return sorted;
+  };
+
+  const getFilteredAndSortedProducts = useMemo(() => {
+    const filteredProducts = filterProductsResult(products);
+    return sortProductsByOrdering(filteredProducts, defaultOrdering);
+  }, [products, filters, defaultOrdering]);
+
+  const handleProductOrdering = (orderingName: string) => {
+    setDefaultOrdering(orderingName);
+  };
 
   return (
     <>
@@ -161,14 +219,14 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
               </div>
               <div className="flex items-center gap-4">
                 <p className="text-sm text-gray-500">
-                  {filteredProducts.length > 0
-                    ? `${filteredProducts.length} produtos`
+                  {getFilteredAndSortedProducts.length > 0
+                    ? `${getFilteredAndSortedProducts.length} produtos`
                     : `${products.length}`}
                 </p>
                 <DropdownMenu onOpenChange={setIsOpenDropdown}>
                   <DropdownMenuTrigger className="flex items-center gap-1 rounded-full border border-gray-200 px-3 py-2 text-sm">
                     Ordenar por:{" "}
-                    <span className="font-semibold">{defaultOrdening}</span>{" "}
+                    <span className="font-semibold">{defaultOrdering}</span>{" "}
                     <ChevronDown
                       size={15}
                       className={`transition-transform duration-200 ${
@@ -178,24 +236,24 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem
-                      onClick={() => setDefaultOrdening("Mais recente")}
+                      onClick={() => handleProductOrdering("Mais recentes")}
                     >
                       <ClockArrowUp />
-                      Mais recente
+                      Mais recentes
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => setDefaultOrdening("Menos recente")}
+                      onClick={() => handleProductOrdering("Menos recentes")}
                     >
                       <ClockArrowDown />
-                      Menos recente
+                      Menos recentes
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => setDefaultOrdening("Maior preço")}
+                      onClick={() => handleProductOrdering("Maior preço")}
                     >
                       <BanknoteArrowUp /> Maior preço
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => setDefaultOrdening("Menor preço")}
+                      onClick={() => handleProductOrdering("Menor preço")}
                     >
                       <BanknoteArrowDown /> Menor preço
                     </DropdownMenuItem>
@@ -205,7 +263,7 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
             </div>
 
             <div className="grid grid-cols-1 gap-4 px-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {filteredProducts.map((product) => (
+              {getFilteredAndSortedProducts.map((product) => (
                 <ProductItem
                   product={product}
                   key={product.id}
@@ -214,7 +272,7 @@ const CatalogClient = ({ marks, categories, products }: CatalogClientProps) => {
               ))}
             </div>
 
-            {filteredProducts.length === 0 && (
+            {getFilteredAndSortedProducts.length === 0 && (
               <div className="flex h-32 items-center justify-center">
                 <p className="text-gray-500">
                   Nenhum produto encontrado com os filtros selecionados.
