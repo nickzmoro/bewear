@@ -13,6 +13,8 @@ import {
 } from "../ui/dropdown-menu";
 import { useMemo } from "react";
 import { useFavorites } from "@/hooks/queries/use-favorites";
+import { authClient } from "@/lib/auth-client";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 interface ProductItemFavoriteActionsProps {
   product: typeof productTable.$inferSelect & {
@@ -27,11 +29,39 @@ export const ProductItemFavoriteActions = ({
   favoriteId,
   isFavorite = false,
 }: ProductItemFavoriteActionsProps) => {
+  const { data: session } = authClient.useSession();
   const { data: favorites } = useFavorites();
   const { mutate: addToFavorites, isPending: isAdding } =
     useAddFavoriteProduct();
   const { mutate: removeFromFavorites, isPending: isRemoving } =
     useRemoveFavoriteProduct();
+
+  if (!session?.user) {
+    return (
+      <div className="absolute top-3 right-3 opacity-0 transition-opacity duration-100 ease-in-out group-hover:opacity-100 max-md:pointer-events-auto max-md:opacity-100 max-sm:top-2 max-sm:right-2">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              size="icon"
+              className="rounded-full bg-[#25252570] hover:bg-[#25252593]"
+            >
+              <Heart size={15} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-fit rounded-full bg-[#ffffff8c] py-2 shadow-none backdrop-blur-xl"
+            side="left"
+            hideWhenDetached
+            sideOffset={5}
+          >
+            <div>
+              <p className="text-sm text-[#000000a9]">Necessita estar logado</p>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+    );
+  }
 
   const isProductFavorited = useMemo(() => {
     return isFavorite
