@@ -36,6 +36,22 @@ export const ProductItemFavoriteActions = ({
   const { mutate: removeFromFavorites, isPending: isRemoving } =
     useRemoveFavoriteProduct();
 
+  const isProductFavorited = useMemo(() => {
+    return isFavorite
+      ? true
+      : !favorites
+        ? false
+        : favorites.some((fav) => fav.product.id === product.id);
+  }, [favorites, product.id, isFavorite]);
+
+  const currentFavoriteId = useMemo(() => {
+    return isFavorite
+      ? favoriteId
+      : !favorites
+        ? undefined
+        : favorites.find((favorite) => favorite.product.id === product.id)?.id;
+  }, [favorites, isFavorite, product.id, favoriteId]);
+
   if (!session?.user) {
     return (
       <div className="absolute top-3 right-3 opacity-0 transition-opacity duration-100 ease-in-out group-hover:opacity-100 max-md:pointer-events-auto max-md:opacity-100 max-sm:top-2 max-sm:right-2">
@@ -62,22 +78,6 @@ export const ProductItemFavoriteActions = ({
       </div>
     );
   }
-
-  const isProductFavorited = useMemo(() => {
-    return isFavorite
-      ? true
-      : !favorites
-        ? false
-        : favorites.some((fav) => fav.product.id === product.id);
-  }, [favorites, product.id, isFavorite]);
-
-  const currentFavoriteId = useMemo(() => {
-    return isFavorite
-      ? favoriteId
-      : !favorites
-        ? undefined
-        : favorites.find((favorite) => favorite.product.id === product.id)?.id;
-  }, [favorites, isFavorite, product.id, favoriteId]);
 
   const handleAddToFavorites = (event: React.MouseEvent) => {
     event.preventDefault();
