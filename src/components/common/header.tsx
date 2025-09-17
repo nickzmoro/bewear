@@ -5,11 +5,13 @@ import { Button } from "../ui/button";
 import {
   ChevronDown,
   ChevronUp,
+  Heart,
   Home,
   LogInIcon,
   LogOutIcon,
   MapPin,
   MenuIcon,
+  Search,
   Star,
   Truck,
   User2,
@@ -40,6 +42,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useFavorites } from "@/hooks/queries/use-favorites";
+import { Badge } from "../ui/badge";
+import { Input } from "../ui/input";
+import SearchInput from "./search-input";
 
 const Header = () => {
   const { data: session } = authClient.useSession();
@@ -48,134 +54,24 @@ const Header = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const { data: favorites } = useFavorites();
+
   const closeSheet = () => setIsSheetOpen(false);
 
   return (
     <header className="flex h-auto w-full items-center justify-between p-5 min-sm:px-10">
-      <div className="hidden items-center gap-2 min-sm:flex">
-        {session?.user ? (
-          <>
-            <DropdownMenu
-              open={isDropdownOpen}
-              onOpenChange={setIsDropdownOpen}
-            >
-              <DropdownMenuTrigger className="outline-0">
-                <Button
-                  className="flex items-center gap-2 font-medium"
-                  variant={"ghost"}
-                >
-                  <Avatar className="h-auto w-6">
-                    <AvatarImage
-                      src={session?.user?.image as string | undefined}
-                    />
-                    <AvatarFallback className="bg-gray-200">
-                      {session?.user?.name?.split(" ")[0]?.[0]}
-                      {session?.user?.name?.split(" ")[1]?.[0]}
-                    </AvatarFallback>
-                  </Avatar>{" "}
-                  Meu perfil
-                  <ChevronDown
-                    className={`transition-transform duration-200 ${
-                      isDropdownOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="ml-5">
-                <div className="flex flex-row-reverse items-start">
-                  <div>
-                    <DropdownMenuLabel className="pb-0">
-                      Olá, {session.user.name}!
-                    </DropdownMenuLabel>
-                    <DropdownMenuLabel className="pt-0 text-[0.8rem] font-normal text-gray-500">
-                      {session.user.email}
-                    </DropdownMenuLabel>
-                  </div>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Link href={"/"} className="flex w-full items-center gap-2">
-                    <Home color="#1a1a1a" /> Início
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href={"/favorites"}
-                    className="flex w-full items-center gap-2"
-                  >
-                    <Star color="#1a1a1a" /> Favoritos
-                  </Link>
-                </DropdownMenuItem>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem>
-                  <Link
-                    href={"/my-orders"}
-                    className="flex w-full items-center gap-2"
-                  >
-                    <Truck color="#1a1a1a" /> Meus pedidos
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href={"/addresses"}
-                    className="flex w-full items-center gap-2"
-                  >
-                    <MapPin color="#1a1a1a" /> Meus endereços
-                  </Link>
-                </DropdownMenuItem>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem className="px-0">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => {
-                      authClient.signOut();
-                      queryClient.removeQueries({
-                        queryKey: getUseCartQueryKey(),
-                        exact: false,
-                      });
-                      toast.info(
-                        "Você deslogou da sua conta. Faça login novamente!",
-                      );
-                    }}
-                    className="flex w-full items-center justify-start px-0 text-sm font-normal text-red-400 hover:bg-red-100 hover:text-red-400"
-                  >
-                    <LogOutIcon
-                      size={10}
-                      className="text-red-400 hover:text-red-500"
-                    />{" "}
-                    Sair
-                  </Button>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </>
-        ) : (
-          <Button
-            variant="ghost"
-            asChild
-            className="flex gap-1 text-[0.9rem] font-medium hover:opacity-90"
-          >
-            <Link href="/authentication">
-              Faça seu login <LogInIcon />
-            </Link>
-          </Button>
-        )}
-      </div>
-
       <Link href="/">
         <Image src="/logo.svg" alt="BEWEAR" width={100} height={50} />
       </Link>
 
+      <SearchInput />
+
+      {/* MENU MOBILE */}
       <div className="flex items-center gap-1 min-sm:hidden">
         <Cart />
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button variant="ghost" size="icon">
               <MenuIcon />
             </Button>
           </SheetTrigger>
@@ -308,8 +204,135 @@ const Header = () => {
         </Sheet>
       </div>
 
+      {/* CONTINUAÇÃO DESKTOP */}
       <div className="hidden items-center gap-2 min-sm:flex">
+        <Button variant="ghost" size="icon" asChild className="relative">
+          <Link href="/favorites">
+            <Heart />
+            <div className="absolute top-[-10px] right-[-3px] flex items-center justify-center rounded-full bg-[#181818] px-[4px] text-white">
+              <Badge
+                className="w-[1px] bg-[#181818] px-[4px] text-[0.6rem] font-semibold text-white"
+                variant="secondary"
+              >
+                {favorites?.length ?? 0}
+              </Badge>
+            </div>
+          </Link>
+        </Button>
         <Cart />
+        <div>
+          {session?.user ? (
+            <>
+              <DropdownMenu
+                open={isDropdownOpen}
+                onOpenChange={setIsDropdownOpen}
+              >
+                <DropdownMenuTrigger className="outline-0">
+                  <Button
+                    className="flex items-center gap-2 font-medium"
+                    variant={"ghost"}
+                  >
+                    <Avatar className="h-auto w-6">
+                      <AvatarImage
+                        src={session?.user?.image as string | undefined}
+                      />
+                      <AvatarFallback className="bg-gray-200">
+                        {session?.user?.name?.split(" ")[0]?.[0]}
+                        {session?.user?.name?.split(" ")[1]?.[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <ChevronDown
+                      className={`transition-transform duration-200 ${
+                        isDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="mr-5">
+                  <div className="flex flex-row-reverse items-start">
+                    <div>
+                      <DropdownMenuLabel className="pb-0">
+                        Olá, {session.user.name}!
+                      </DropdownMenuLabel>
+                      <DropdownMenuLabel className="pt-0 text-[0.8rem] font-normal text-gray-500">
+                        {session.user.email}
+                      </DropdownMenuLabel>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Link href={"/"} className="flex w-full items-center gap-2">
+                      <Home color="#1a1a1a" /> Início
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link
+                      href={"/favorites"}
+                      className="flex w-full items-center gap-2"
+                    >
+                      <Star color="#1a1a1a" /> Favoritos
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem>
+                    <Link
+                      href={"/my-orders"}
+                      className="flex w-full items-center gap-2"
+                    >
+                      <Truck color="#1a1a1a" /> Meus pedidos
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link
+                      href={"/addresses"}
+                      className="flex w-full items-center gap-2"
+                    >
+                      <MapPin color="#1a1a1a" /> Meus endereços
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem className="px-0">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        authClient.signOut();
+                        queryClient.removeQueries({
+                          queryKey: getUseCartQueryKey(),
+                          exact: false,
+                        });
+                        toast.info(
+                          "Você deslogou da sua conta. Faça login novamente!",
+                        );
+                      }}
+                      className="flex w-full items-center justify-start px-0 text-sm font-normal text-red-400 hover:bg-red-100 hover:text-red-400"
+                    >
+                      <LogOutIcon
+                        size={10}
+                        className="text-red-400 hover:text-red-500"
+                      />{" "}
+                      Sair
+                    </Button>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          ) : (
+            <Button
+              variant="ghost"
+              asChild
+              className="flex gap-1 text-[0.9rem] font-medium hover:opacity-90"
+            >
+              <Link href="/authentication">
+                <LogInIcon />
+              </Link>
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   );

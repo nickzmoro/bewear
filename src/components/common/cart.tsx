@@ -17,6 +17,7 @@ import { useState } from "react";
 import LogInCard from "./log-in-card";
 import { useCart } from "@/hooks/queries/use-cart";
 import { Badge } from "../ui/badge";
+import { useFavorites } from "@/hooks/queries/use-favorites";
 
 export const Cart = () => {
   const [cardUserLogin, setCardUserLogin] = useState(false);
@@ -39,7 +40,7 @@ export const Cart = () => {
       {session?.user ? (
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="relative">
+            <Button variant="ghost" size="icon" className="relative">
               <ShoppingBasketIcon />
               <div className="absolute top-[-10px] right-[-3px] flex items-center justify-center rounded-full bg-[#181818] px-[4px] text-white">
                 <Badge
