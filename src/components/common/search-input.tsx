@@ -108,6 +108,7 @@ const SearchInput = ({
                 key={product.id}
                 href={`/product-variant/${product.variants[0]?.slug}`}
                 className="flex gap-3 rounded-lg p-2 transition-colors hover:bg-gray-100"
+                onClick={() => setShowResults(false)}
               >
                 <div className="h-16 w-16 flex-shrink-0 rounded-lg bg-gray-100">
                   {product.variants[0] && (
