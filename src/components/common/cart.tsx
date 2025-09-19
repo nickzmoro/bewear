@@ -40,7 +40,11 @@ export const Cart = () => {
       {session?.user ? (
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative rounded-full"
+            >
               <ShoppingBasketIcon />
               <div className="absolute top-[-10px] right-[-3px] flex items-center justify-center rounded-full bg-[#181818] px-[4px] text-white">
                 <Badge
@@ -139,9 +143,10 @@ export const Cart = () => {
       ) : (
         <>
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             onClick={() => setCardUserLogin(true)}
+            className="rounded-full"
           >
             <ShoppingBasketIcon />
           </Button>
