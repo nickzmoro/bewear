@@ -1,7 +1,11 @@
 import ProductList from "@/components/common/product-list";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db";
-import { productTable, productVariantTable } from "@/db/schema";
+import {
+  productTable,
+  productVariantTable,
+  shippingAddressTable,
+} from "@/db/schema";
 import { formatCentsToBRL } from "@/helpers/money";
 import { eq } from "drizzle-orm";
 import Image from "next/image";
@@ -13,6 +17,8 @@ import { Suspense } from "react";
 import Loading from "./loading";
 import CategoryList from "@/components/common/category-list";
 import { Separator } from "@/components/ui/separator";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 interface ProductVariantPageProps {
   params: Promise<{ slug: string }>;
@@ -43,6 +49,17 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
   });
 
   const categories = await db.query.categoryTable.findMany();
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  let shippingAddresses: (typeof shippingAddressTable.$inferSelect)[] = [];
+  if (session?.user) {
+    shippingAddresses = await db.query.shippingAddressTable.findMany({
+      where: eq(shippingAddressTable.userId, session.user.id),
+    });
+  }
 
   return (
     <>
@@ -82,21 +99,24 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
                 />
 
                 <div className="hidden min-sm:mt-6 min-sm:flex min-sm:flex-col min-sm:gap-6">
-                  <ProductActions productVariantId={productVariant.id} />
+                  <ProductActions
+                    productVariantId={productVariant.id}
+                    shippingAddresses={shippingAddresses}
+                  />
                 </div>
               </div>
             </div>
 
             <div className="hidden max-sm:mt-6 max-sm:flex max-sm:flex-col max-sm:gap-6">
-              <ProductActions productVariantId={productVariant.id} />
+              <ProductActions
+                productVariantId={productVariant.id}
+                shippingAddresses={shippingAddresses}
+              />
             </div>
 
             <div className="mt-8 flex flex-col gap-6">
               <div className="h-[1px] w-2/12 bg-[#00000025]"></div>
-              <ProductList
-                products={likelyProducts}
-                title="Você também pode gostar"
-              />
+              <ProductList products={likelyProducts} title="Você pode gostar" />
             </div>
           </Suspense>
         </div>

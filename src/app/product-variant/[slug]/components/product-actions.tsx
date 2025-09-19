@@ -17,24 +17,26 @@ import { createCheckoutSession } from "@/actions/create-checkout-session";
 import { useCreateDirectOrder } from "@/hooks/mutations/use-create-direct-order";
 
 import AddToCartButton from "./add-to-cart-button";
-import { useUserAddresses } from "@/hooks/queries/use-shipping-addresses";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { shippingAddressTable } from "@/db/schema";
 
 interface ProductActionsProps {
   productVariantId: string;
+  shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
 }
 
-const ProductActions = ({ productVariantId }: ProductActionsProps) => {
+const ProductActions = ({
+  productVariantId,
+  shippingAddresses,
+}: ProductActionsProps) => {
   const [quantity, setQuantity] = useState(1);
   const router = useRouter();
   const createDirectOrderMutation = useCreateDirectOrder();
-  const { data: shippingAddresses, isLoading: isLoadingAddresses } =
-    useUserAddresses();
 
   const hasShippingAddresses =
     shippingAddresses && shippingAddresses.length > 0;
@@ -109,15 +111,6 @@ const ProductActions = ({ productVariantId }: ProductActionsProps) => {
       }
     }
   };
-
-  if (isLoadingAddresses) {
-    return (
-      <div className="space-y-4">
-        <div className="h-4 w-32 animate-pulse rounded bg-gray-200" />
-        <div className="h-10 w-full animate-pulse rounded bg-gray-200" />
-      </div>
-    );
-  }
 
   return (
     <>
