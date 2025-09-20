@@ -19,6 +19,8 @@ import CategoryList from "@/components/common/category-list";
 import { Separator } from "@/components/ui/separator";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import Header from "@/components/common/header";
+import Footer from "@/components/common/footer";
 
 interface ProductVariantPageProps {
   params: Promise<{ slug: string }>;
@@ -63,6 +65,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
 
   return (
     <>
+      <Header />
       <CategoryList categories={categories} />
       <Separator className="mb-5 max-sm:hidden" />
       <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
@@ -120,6 +123,9 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
             </div>
           </Suspense>
         </div>
+      </div>
+      <div className="mt-12">
+        <Footer />
       </div>
     </>
   );

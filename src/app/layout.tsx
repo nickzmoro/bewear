@@ -25,14 +25,8 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${poppins.variable} antialiased`}>
-        <ReactQueryProvider>
-          <Header />
-          {children}
-        </ReactQueryProvider>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
         <Toaster position="top-center" richColors />
-        <div className="mt-12">
-          <Footer />
-        </div>
       </body>
     </html>
   );

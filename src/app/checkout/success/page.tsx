@@ -1,6 +1,7 @@
 "use client";
 
 import OrderSteps from "@/app/cart/components/order-steps";
+import Header from "@/components/common/header";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,6 +16,7 @@ import Link from "next/link";
 const SuccessPage = () => {
   return (
     <>
+      <Header />
       <div className="px-5">
         <OrderSteps hasIdentification hasPayment />
       </div>

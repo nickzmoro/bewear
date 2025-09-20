@@ -7,6 +7,8 @@ import { orderTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import Orders from "./components/orders";
+import Header from "@/components/common/header";
+import Footer from "@/components/common/footer";
 
 const MyOrdersPage = async () => {
   const session = await auth.api.getSession({
@@ -32,7 +34,8 @@ const MyOrdersPage = async () => {
 
   return (
     <>
-      <div className="flex flex-col px-5 min-sm:items-center min-sm:justify-center min-sm:px-0">
+      <Header />
+      <div className="mt-2 flex flex-col px-5 min-sm:items-center min-sm:justify-center min-sm:px-0">
         <div className="min-sm:min-w-[600px] min-lg:min-w-[900px]">
           <Orders
             orders={orders.map((order) => ({
@@ -60,6 +63,9 @@ const MyOrdersPage = async () => {
             }))}
           />
         </div>
+      </div>
+      <div className="mt-12">
+        <Footer />
       </div>
     </>
   );

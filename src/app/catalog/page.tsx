@@ -1,5 +1,7 @@
 import { db } from "@/db";
 import CatalogClient from "./components/catalog-client";
+import Header from "@/components/common/header";
+import Footer from "@/components/common/footer";
 
 const CatalogPage = async () => {
   const marks = await db.query.markTable.findMany();
@@ -13,7 +15,14 @@ const CatalogPage = async () => {
   });
 
   return (
-    <CatalogClient marks={marks} categories={categories} products={products} />
+    <div className="mb-10">
+      <Header />
+      <CatalogClient
+        marks={marks}
+        categories={categories}
+        products={products}
+      />
+    </div>
   );
 };
 

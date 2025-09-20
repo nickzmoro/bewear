@@ -12,6 +12,7 @@ import { Suspense } from "react";
 import Loading from "./loading";
 import OrderSteps from "../components/order-steps";
 import { Badge } from "@/components/ui/badge";
+import Header from "@/components/common/header";
 
 const ConfirmationPage = async () => {
   const session = await auth.api.getSession({
@@ -54,53 +55,56 @@ const ConfirmationPage = async () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <Suspense fallback={<Loading />}>
-          <div className="mb-8">
-            <OrderSteps hasIdentification hasPayment={false} />
-          </div>
-
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <div className="order-1">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="min-sm:text-lg">Pagamento</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <Card>
-                    <CardContent className="flex flex-col items-start gap-5 min-sm:flex-row min-sm:items-center">
-                      <Badge className="rounded-full bg-[#ccc] text-xs font-medium">
-                        Identificação
-                      </Badge>
-                      <p className="text-muted-foreground text-sm">
-                        {formatAddress(cart.shippingAddress)}
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <FinishOrderButton />
-                </CardContent>
-              </Card>
+    <>
+      <Header />
+      <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <Suspense fallback={<Loading />}>
+            <div className="mb-8">
+              <OrderSteps hasIdentification hasPayment={false} />
             </div>
 
-            <div className="order-2">
-              <CartSummary
-                subtotalInCents={cartTotalInCents}
-                totalInCents={cartTotalInCents}
-                products={cart.items.map((item) => ({
-                  id: item.productVariant.id,
-                  name: item.productVariant.product.name,
-                  variantName: item.productVariant.name,
-                  quantity: item.quantity,
-                  priceInCents: item.productVariant.priceInCents,
-                  imageUrl: item.productVariant.imageUrl,
-                }))}
-              />
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+              <div className="order-1">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="min-sm:text-lg">Pagamento</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <Card>
+                      <CardContent className="flex flex-col items-start gap-5 min-sm:flex-row min-sm:items-center">
+                        <Badge className="rounded-full bg-[#ccc] text-xs font-medium">
+                          Identificação
+                        </Badge>
+                        <p className="text-muted-foreground text-sm">
+                          {formatAddress(cart.shippingAddress)}
+                        </p>
+                      </CardContent>
+                    </Card>
+                    <FinishOrderButton />
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="order-2">
+                <CartSummary
+                  subtotalInCents={cartTotalInCents}
+                  totalInCents={cartTotalInCents}
+                  products={cart.items.map((item) => ({
+                    id: item.productVariant.id,
+                    name: item.productVariant.product.name,
+                    variantName: item.productVariant.name,
+                    quantity: item.quantity,
+                    priceInCents: item.productVariant.priceInCents,
+                    imageUrl: item.productVariant.imageUrl,
+                  }))}
+                />
+              </div>
             </div>
-          </div>
-        </Suspense>
+          </Suspense>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
