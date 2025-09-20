@@ -24,7 +24,7 @@ const ProductList = ({ title, products }: ProductListProps) => {
         </h3>
         <Link
           href="/catalog"
-          className="group text-muted-foreground flex items-center gap-1 pr-10 text-sm font-medium hover:text-[#414141]"
+          className="group text-muted-foreground flex items-center gap-1 pr-5 text-sm font-medium hover:text-[#414141] min-sm:pr-10"
         >
           Ver todos
           <ChevronRight

@@ -82,28 +82,28 @@ const SearchInput = ({
       }
     >
       <Input
-        className="h-[50px] rounded-full px-[50px] text-sm outline-none placeholder:text-[#9A9A9A] focus-visible:border-[#00000042] focus-visible:ring-0"
+        className="h-[50px] rounded-full px-[50px] text-xs outline-none placeholder:text-[#9A9A9A] focus-visible:border-[#00000042] focus-visible:ring-0 max-sm:h-[40px] max-sm:px-[40px] min-sm:text-sm"
         placeholder="Buscar produtos, marcas, categorias..."
         onChange={handleInputChange}
         onFocus={handleInputFocus}
       />
       <Search
-        className="absolute top-[16px] left-5"
+        className="absolute top-[16px] left-5 max-sm:top-[13px] max-sm:left-4 max-sm:h-[14px] max-sm:w-[14px]"
         size={18}
         color="#9A9A9A"
       />
 
       {showResults && (
-        <div className="absolute top-[60px] z-50 w-full rounded-2xl border bg-white p-5">
+        <div className="absolute top-[60px] z-50 w-full rounded-2xl border bg-white p-5 max-sm:top-[50px]">
           <div
-            className={`text-sm text-gray-600 ${filteredProducts?.length === 0 ? "" : "mb-3"}`}
+            className={`text-xs text-gray-600 min-sm:text-sm ${filteredProducts?.length === 0 ? "" : "mb-3"}`}
           >
             {filteredProducts?.length} produto
             {filteredProducts?.length !== 1 ? "s" : ""} encontrado
             {filteredProducts?.length !== 1 ? "s" : ""} para "{valueInput}"
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredProducts?.slice(0, 6).map((product) => (
+          <div className="grid max-h-[500px] grid-cols-1 gap-4 overflow-y-scroll sm:grid-cols-2 lg:grid-cols-3">
+            {filteredProducts?.map((product) => (
               <Link
                 key={product.id}
                 href={`/product-variant/${product.variants[0]?.slug}`}
