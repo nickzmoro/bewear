@@ -4,9 +4,20 @@ import SignUpForm from "./components/sign-up-form";
 import Header from "@/components/common/header";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
-const Authentication = () => {
+const Authentication = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (session?.user) {
+    return redirect("/");
+  }
+
   return (
     <>
       <div className="flex min-h-screen">
