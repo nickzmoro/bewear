@@ -8,13 +8,14 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import Header from "@/components/common/header";
+import { redirect } from "next/navigation";
 
 const MyAddressesPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
   if (!session?.user) {
-    throw new Error("Unauthorized");
+    redirect("/authentication");
   }
 
   const shippingAddresses = await db.query.shippingAddressTable.findMany({
