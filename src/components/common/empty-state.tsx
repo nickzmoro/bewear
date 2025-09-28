@@ -5,7 +5,9 @@ interface EmptyStateProps {
   imageAlt: string;
   title: string;
   description: string;
-  className?: string;
+  classNameTitle?: string;
+  classNameDescription?: string;
+  classNameImage?: string;
 }
 
 export const EmptyState = ({
@@ -13,22 +15,32 @@ export const EmptyState = ({
   imageAlt,
   title,
   description,
-  className = "",
+  classNameTitle = "",
+  classNameDescription = "",
+  classNameImage = "",
 }: EmptyStateProps) => {
   return (
     <div
-      className={`mt-10 flex flex-col items-center justify-center text-gray-500 ${className}`}
+      className={`mt-10 flex flex-col items-center justify-center text-gray-500`}
     >
       <Image
         src={imageSrc}
         alt={imageAlt}
-        width="250"
+        width="200"
         height="0"
-        className="h-auto"
+        className={`h-auto ${classNameImage}`}
       />
       <div className="mt-8 flex h-auto max-w-[400px] flex-col gap-2 text-center">
-        <h3 className="text-xl font-semibold text-[#141414]">{title}</h3>
-        <span className="text-muted-foreground leading-5">{description}</span>
+        <h3
+          className={`text-xl font-semibold text-[#141414] max-sm:text-[16px] ${classNameTitle}`}
+        >
+          {title}
+        </h3>
+        <span
+          className={`text-muted-foreground leading-5 max-sm:text-sm ${classNameDescription}`}
+        >
+          {description}
+        </span>
       </div>
     </div>
   );

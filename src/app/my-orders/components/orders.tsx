@@ -20,6 +20,8 @@ import { formatCentsToBRL } from "@/helpers/money";
 import { useCart } from "@/hooks/queries/use-cart";
 import { BoxIcon, Loader2 } from "lucide-react";
 import { createCheckoutSession } from "@/actions/create-checkout-session";
+import { EmptyState } from "@/components/common/empty-state";
+import Link from "next/link";
 
 interface OrdersProps {
   orders: Array<{
@@ -89,9 +91,20 @@ const Orders = ({ orders }: OrdersProps) => {
       <div className="mt-3 h-[1px] w-2/12 bg-[#00000025]"></div>
 
       {orders.length < 1 && (
-        <p className="text-sm text-[#646464]">
-          Nenhum pedido foi feito até o momento..
-        </p>
+        <>
+          <EmptyState
+            imageSrc="/illustration-emptyOrders.svg"
+            imageAlt="ilustração-favoritos"
+            title="Nenhum pedido encontrado"
+            description="Parece que você ainda não fez nenhum pedido. Explore nossos itens e comece agora mesmo."
+            classNameImage="w-[280px] max-sm:!w-[240px]"
+          />
+          <div className="mt-5 flex items-center justify-center">
+            <Button className="w-60 rounded-full" asChild>
+              <Link href="/catalog">Explorar produtos</Link>
+            </Button>
+          </div>
+        </>
       )}
 
       <div className="mt-7">

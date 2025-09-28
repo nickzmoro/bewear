@@ -3,6 +3,8 @@
 import { useUserAddresses } from "@/hooks/queries/use-shipping-addresses";
 import { shippingAddressTable } from "@/db/schema";
 import AddressCardWrapper from "./address-card-wrapper";
+import Image from "next/image";
+import { EmptyState } from "@/components/common/empty-state";
 
 interface AddressesClientProps {
   initialAddresses: (typeof shippingAddressTable.$inferSelect)[];
@@ -15,9 +17,13 @@ export const AddressesClient = ({ initialAddresses }: AddressesClientProps) => {
 
   if (!addresses || addresses.length === 0) {
     return (
-      <div className="mt-5 text-center text-gray-500">
-        Nenhum endereço cadastrado.
-      </div>
+      <EmptyState
+        imageSrc="/illustration-emptyAddresses.svg"
+        imageAlt="ilustracao"
+        title="Lista de endereços vazia"
+        description="Sua lista está vazia, cadastre um novo endereço para visualizá-los."
+        classNameImage="!w-[240px] max-sm:!w-[150px]"
+      />
     );
   }
 

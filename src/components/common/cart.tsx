@@ -18,6 +18,7 @@ import LogInCard from "./log-in-card";
 import { useCart } from "@/hooks/queries/use-cart";
 import { Badge } from "../ui/badge";
 import { useFavorites } from "@/hooks/queries/use-favorites";
+import { EmptyState } from "./empty-state";
 
 export const Cart = () => {
   const [cardUserLogin, setCardUserLogin] = useState(false);
@@ -66,15 +67,13 @@ export const Cart = () => {
                 <ScrollArea className="h-full">
                   <div className="flex h-full flex-col gap-8">
                     {cart?.items && cart?.items.length === 0 && (
-                      <div className="flex flex-col items-center justify-center py-8 text-center">
-                        <ShoppingBasketIcon className="text-muted-foreground mb-4 h-12 w-12" />
-                        <p className="font-medium">
-                          Nenhum item no seu carrinho.
-                        </p>
-                        <p className="text-muted-foreground mt-1 text-sm">
-                          Adicione produtos para começar suas compras!
-                        </p>
-                      </div>
+                      <EmptyState
+                        imageSrc="/illustration-emptyCart.svg"
+                        imageAlt="ilustração-carrinho"
+                        title="Nenhum item adicionado ao carrinho"
+                        description="Adicione ao menos um produto no carrinho para visualizá-los."
+                        classNameImage="max-sm:!w-[150px]"
+                      />
                     )}
                     {cart?.items.map((item) => (
                       <CartItem

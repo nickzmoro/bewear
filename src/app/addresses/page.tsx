@@ -26,21 +26,23 @@ const MyAddressesPage = async () => {
     <>
       <Header />
       <div className="mt-5 flex flex-col px-5 min-sm:items-center min-sm:justify-center min-sm:px-0">
-        <div className="min-sm:min-w-[600px] min-lg:min-w-[900px]">
-          <h2 className="mt-5 flex items-center gap-2 text-xl font-semibold min-sm:text-2xl">
-            Endereços
-          </h2>
+        <div className="h-auto min-sm:min-w-[600px] min-lg:min-w-[900px]">
+          <div className="flex justify-between">
+            <h2 className="mt-5 flex items-center gap-2 text-xl font-semibold min-sm:text-2xl">
+              Endereços
+            </h2>
+            <Button
+              className="mt-5 flex w-fit gap-2 rounded-full"
+              size="lg"
+              asChild
+            >
+              <Link href="/addresses/register">
+                <Plus size={22} color="#fff" absoluteStrokeWidth /> Adicionar
+              </Link>
+            </Button>
+          </div>
           <div className="mt-3 h-[1px] w-2/12 bg-[#00000025]"></div>
           <AddressesClient initialAddresses={shippingAddresses} />
-          <Button
-            className="mt-5 flex w-full gap-2 rounded-full"
-            size="lg"
-            asChild
-          >
-            <Link href="/addresses/register">
-              <Plus size={22} color="#fff" /> Adicionar um endereço
-            </Link>
-          </Button>
         </div>
       </div>
     </>

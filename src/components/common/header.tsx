@@ -283,14 +283,25 @@ const Header = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="mr-5">
-                    <div className="flex flex-row-reverse items-start">
-                      <div>
-                        <DropdownMenuLabel className="pb-0">
-                          Olá, {session.user.name}!
-                        </DropdownMenuLabel>
-                        <DropdownMenuLabel className="pt-0 text-[0.8rem] font-normal text-gray-500">
-                          {session.user.email}
-                        </DropdownMenuLabel>
+                    <div className="flex flex-row-reverse items-start px-2">
+                      <div className="flex items-start">
+                        <Avatar className="mt-2.5 h-auto w-6">
+                          <AvatarImage
+                            src={session?.user?.image as string | undefined}
+                          />
+                          <AvatarFallback className="bg-gray-200">
+                            {session?.user?.name?.split(" ")[0]?.[0]}
+                            {session?.user?.name?.split(" ")[1]?.[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <DropdownMenuLabel className="pb-0">
+                            Olá, {session.user.name}!
+                          </DropdownMenuLabel>
+                          <DropdownMenuLabel className="pt-0 text-[0.8rem] font-normal text-gray-500">
+                            {session.user.email}
+                          </DropdownMenuLabel>
+                        </div>
                       </div>
                     </div>
                     <DropdownMenuSeparator />
