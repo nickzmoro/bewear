@@ -37,7 +37,7 @@ const PartnerBrandsList = ({ title }: PartnerBrandsListProps) => {
           },
           1280: {
             slidesPerView: 7,
-            spaceBetween: 0,
+            spaceBetween: 20,
           },
         }}
       >

@@ -57,7 +57,7 @@ export const Cart = () => {
               </div>
             </Button>
           </SheetTrigger>
-          <SheetContent className="w-4/5">
+          <SheetContent className="max-h-screen w-4/5">
             <SheetHeader>
               <SheetTitle>Carrinho</SheetTitle>
             </SheetHeader>
