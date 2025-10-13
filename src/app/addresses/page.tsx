@@ -9,6 +9,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import Header from "@/components/common/header";
 import { redirect } from "next/navigation";
+import Footer from "@/components/common/footer";
 
 const MyAddressesPage = async () => {
   const session = await auth.api.getSession({
@@ -23,7 +24,7 @@ const MyAddressesPage = async () => {
   });
 
   return (
-    <>
+    <div className="flex h-screen flex-col justify-between">
       <Header />
       <div className="mt-5 flex flex-col px-5 min-sm:items-center min-sm:justify-center min-sm:px-0">
         <div className="h-auto min-sm:min-w-[600px] min-lg:min-w-[900px]">
@@ -45,7 +46,10 @@ const MyAddressesPage = async () => {
           <AddressesClient initialAddresses={shippingAddresses} />
         </div>
       </div>
-    </>
+      <div className="mt-12">
+        <Footer />
+      </div>
+    </div>
   );
 };
 

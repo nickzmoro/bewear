@@ -33,7 +33,7 @@ const MyOrdersPage = async () => {
   });
 
   return (
-    <>
+    <div className="flex h-screen flex-col justify-between">
       <Header />
       <div className="mt-2 flex flex-col px-5 min-sm:items-center min-sm:justify-center min-sm:px-0">
         <div className="min-sm:min-w-[600px] min-lg:min-w-[900px]">
@@ -67,7 +67,7 @@ const MyOrdersPage = async () => {
       <div className="mt-12">
         <Footer />
       </div>
-    </>
+    </div>
   );
 };
 
