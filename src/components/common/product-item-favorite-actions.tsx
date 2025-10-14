@@ -11,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useFavorites } from "@/hooks/queries/use-favorites";
 import { authClient } from "@/lib/auth-client";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -29,6 +29,7 @@ export const ProductItemFavoriteActions = ({
   favoriteId,
   isFavorite = false,
 }: ProductItemFavoriteActionsProps) => {
+  const [isHovered, setIsHovered] = useState(false);
   const { data: session } = authClient.useSession();
   const { data: favorites } = useFavorites();
   const { mutate: addToFavorites, isPending: isAdding } =
@@ -96,11 +97,13 @@ export const ProductItemFavoriteActions = ({
       <div className="absolute top-3 right-3 opacity-0 transition-opacity duration-100 ease-in-out group-hover:opacity-100 max-md:pointer-events-auto max-md:opacity-100 max-sm:top-2 max-sm:right-2">
         <Button
           size="icon"
-          className="rounded-full bg-[#25252570] hover:bg-[#25252593]"
+          className="bg-primary rounded-full hover:bg-[#25252593]"
           onClick={handleRemoveFromFavorites}
           disabled={isRemoving}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          <HeartOff size={15} />
+          {isHovered ? <HeartOff size={15} /> : <Heart size={15} />}
         </Button>
       </div>
     );
