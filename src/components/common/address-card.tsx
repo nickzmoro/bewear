@@ -59,7 +59,7 @@ const AddressCard = ({
         </div>
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="h-fit rounded-full outline-0">
+          <DropdownMenuTrigger className="h-fit rounded-full outline-0" asChild>
             <Button size="icon" variant="ghost" className="rounded-full">
               <EllipsisVertical size={20} />
             </Button>

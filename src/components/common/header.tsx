@@ -264,7 +264,7 @@ const Header = () => {
                   open={isDropdownOpen}
                   onOpenChange={setIsDropdownOpen}
                 >
-                  <DropdownMenuTrigger className="outline-0">
+                  <DropdownMenuTrigger className="outline-0" asChild>
                     <Button
                       className="flex items-center gap-2 font-medium"
                       variant={"ghost"}
