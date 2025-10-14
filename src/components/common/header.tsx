@@ -47,6 +47,8 @@ import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
 import SearchInput from "./search-input";
 import LogInCard from "./log-in-card";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 const Header = () => {
   const { data: session } = authClient.useSession();
@@ -193,6 +195,7 @@ const Header = () => {
                           toast.info(
                             "Você deslogou da sua conta. Faça login novamente!",
                           );
+                          redirect("/");
                         }}
                         className="flex w-full items-center justify-start text-[#656565] hover:bg-red-100 hover:text-red-400"
                       >
@@ -356,6 +359,7 @@ const Header = () => {
                           toast.info(
                             "Você deslogou da sua conta. Faça login novamente!",
                           );
+                          redirect("/");
                         }}
                         className="flex w-full items-center justify-start px-0 text-sm font-normal text-red-400 hover:bg-red-100 hover:text-red-400"
                       >
