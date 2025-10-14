@@ -1,9 +1,15 @@
+import { isValidCpf } from "@/helpers/isValidCpf";
 import { z } from "zod";
 
 export const addressFormSchema = z.object({
   email: z.email("Email inválido"),
   fullName: z.string().min(1, "Nome completo é obrigatório"),
-  cpf: z.string().regex(/^\d{11}$/, "CPF inválido"),
+  cpf: z
+    .string()
+    .regex(/^\d{11}$/, "CPF inválido")
+    .refine((value) => isValidCpf(value), {
+      message: "CPF inválido",
+    }),
   phone: z.string().regex(/^\d{11}$/, "Celular inválido"),
   zipCode: z.string().regex(/^\d{8}$/, "CEP inválido"),
   number: z.string().regex(/^\d+$/, "Número deve conter apenas dígitos"),
