@@ -49,6 +49,12 @@ import SearchInput from "./search-input";
 import LogInCard from "./log-in-card";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 
 const Header = () => {
   const { data: session } = authClient.useSession();
@@ -164,22 +170,36 @@ const Header = () => {
                       </Button>
                     </div>
                     <Separator />
-                    <div className="my-5 space-y-1">
-                      {categories?.data?.map((category) => (
-                        <Button
-                          className="flex w-full items-center justify-start font-medium"
-                          variant="ghost"
-                          key={category.id}
-                          asChild
-                        >
-                          <Link
-                            href={`/category/${category.slug}`}
-                            onClick={closeSheet}
-                          >
-                            {category.name}
-                          </Link>
-                        </Button>
-                      ))}
+                    <div className="my-2">
+                      <Accordion
+                        type="single"
+                        collapsible
+                        defaultValue="item-1"
+                        className=""
+                      >
+                        <AccordionItem value="item-1">
+                          <AccordionTrigger className="px-4 hover:no-underline">
+                            Categorias
+                          </AccordionTrigger>
+                          <AccordionContent className="max-h-[150px] overflow-y-auto pl-1">
+                            {categories?.data?.map((category) => (
+                              <Button
+                                className="flex w-full items-center justify-start font-medium text-[#5f5f5f]"
+                                variant="ghost"
+                                key={category.id}
+                                asChild
+                              >
+                                <Link
+                                  href={`/category/${category.slug}`}
+                                  onClick={closeSheet}
+                                >
+                                  {category.name}
+                                </Link>
+                              </Button>
+                            ))}
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
                     </div>
                     <Separator />
                     <div className="mt-5">
