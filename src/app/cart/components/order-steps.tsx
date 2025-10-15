@@ -13,7 +13,9 @@ const OrderSteps = ({ hasIdentification, hasPayment }: OrderStepsProps) => {
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-600 max-sm:h-6 max-sm:w-6">
             <Check size={16} className="text-white" />
           </div>
-          <span className="text-sm font-medium text-gray-700">Sacola</span>
+          <span className="text-sm font-medium text-gray-700 max-sm:hidden">
+            Sacola
+          </span>
         </div>
 
         <div className="h-0.5 bg-green-600 max-sm:w-3 min-sm:w-12"></div>
@@ -32,7 +34,9 @@ const OrderSteps = ({ hasIdentification, hasPayment }: OrderStepsProps) => {
               <span className="text-sm font-semibold">2</span>
             )}
           </div>
-          <span className="text-sm font-medium text-gray-700">
+          <span
+            className={`text-sm font-medium text-gray-700 ${hasIdentification && "max-sm:hidden"}`}
+          >
             Identificação
           </span>
         </div>
