@@ -57,13 +57,13 @@ export const Cart = () => {
               </div>
             </Button>
           </SheetTrigger>
-          <SheetContent className="max-h-screen w-4/5">
+          <SheetContent className="max-h-screen w-4/5 overflow-hidden">
             <SheetHeader>
               <SheetTitle>Carrinho</SheetTitle>
             </SheetHeader>
 
-            <div className="flex h-full flex-col px-5 pb-5">
-              <div className="flex h-full max-h-[580px] flex-col overflow-hidden">
+            <div className="flex h-full flex-col justify-between overflow-hidden px-5 pb-5">
+              <div className="flex h-full max-h-1/2 flex-col overflow-hidden">
                 <ScrollArea className="h-full">
                   <div className="flex h-full flex-col gap-8">
                     {cart?.items && cart?.items.length === 0 && (
